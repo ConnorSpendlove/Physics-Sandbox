@@ -7,15 +7,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let paused = false;
     let animationId;
+    let storedPositionX, storedPositionY, storedVelocityX, storedVelocityY;
 
     function moveShape(shape, velocityX, velocityY) {
-        let positionX = 0;
-        let positionY = 0;
+        let positionX = storedPositionX || 0;
+        let positionY = storedPositionY || 0;
+        let velX = storedVelocityX || velocityX;
+        let velY = storedVelocityY || velocityY;
 
         function updatePosition() {
             if (!paused) {
-                positionX += velocityX;
-                positionY += velocityY;
+                positionX += velX;
+                positionY += velY;
 
                 const boxWidth = box.offsetWidth;
                 const boxHeight = box.offsetHeight;
@@ -24,10 +27,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // Check collision with box edges
                 if (positionX <= 0 || positionX + shapeWidth >= boxWidth) {
-                    velocityX = -velocityX; // Reverse direction on X-axis
+                    velX = -velX; // Reverse direction on X-axis
                 }
                 if (positionY <= 0 || positionY + shapeHeight >= boxHeight) {
-                    velocityY = -velocityY; // Reverse direction on Y-axis
+                    velY = -velY; // Reverse direction on Y-axis
                 }
 
                 shape.style.left = positionX + 'px';
@@ -86,6 +89,10 @@ document.addEventListener("DOMContentLoaded", function() {
     pauseButton.addEventListener('click', function() {
         paused = true;
         cancelAnimationFrame(animationId);
+        storedPositionX = parseFloat(shapeContainer.firstElementChild.style.left);
+        storedPositionY = parseFloat(shapeContainer.firstElementChild.style.top);
+        storedVelocityX = storedPositionX ? 2 : null;
+        storedVelocityY = storedPositionY ? 2 : null;
     });
 
     unpauseButton.addEventListener('click', function() {
@@ -100,5 +107,3 @@ document.addEventListener("DOMContentLoaded", function() {
     handleShapeSelection();
     shapeSelector.addEventListener('change', handleShapeSelection);
 });
-
-
