@@ -4,21 +4,23 @@ document.addEventListener("DOMContentLoaded", function() {
     const shapeSelector = document.getElementById('shape');
     const pauseButton = document.getElementById('pause');
     const unpauseButton = document.getElementById('unpause');
+    const startButton = document.getElementById('start'); // Reference to the start button
 
-    let paused = false;
     let animationId;
-    let storedPositionX, storedPositionY, storedVelocityX, storedVelocityY;
+    let paused = true; // Animation is paused initially
+    let storedPositionX = 0;
+    let storedPositionY = 0;
+    let storedVelocityX = 2;
+    let storedVelocityY = 2;
 
     function moveShape(shape, velocityX, velocityY) {
-        let positionX = storedPositionX || 0;
-        let positionY = storedPositionY || 0;
-        let velX = storedVelocityX || velocityX;
-        let velY = storedVelocityY || velocityY;
+        let positionX = storedPositionX;
+        let positionY = storedPositionY;
 
         function updatePosition() {
             if (!paused) {
-                positionX += velX;
-                positionY += velY;
+                positionX += velocityX;
+                positionY += velocityY;
 
                 const boxWidth = box.offsetWidth;
                 const boxHeight = box.offsetHeight;
@@ -27,17 +29,26 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 // Check collision with box edges
                 if (positionX <= 0 || positionX + shapeWidth >= boxWidth) {
-                    velX = -velX; // Reverse direction on X-axis
+                    velocityX = -velocityX; // Reverse direction on X-axis
                 }
                 if (positionY <= 0 || positionY + shapeHeight >= boxHeight) {
-                    velY = -velY; // Reverse direction on Y-axis
+                    velocityY = -velocityY; // Reverse direction on Y-axis
                 }
 
                 shape.style.left = positionX + 'px';
                 shape.style.top = positionY + 'px';
             }
 
-            animationId = requestAnimationFrame(updatePosition);
+            animationId = requestAnimationFrame(function() {
+                updatePosition();
+                updateVelocity();
+            });
+        }
+
+        function updateVelocity() {
+            // This function ensures that the velocity remains constant
+            storedVelocityX = velocityX;
+            storedVelocityY = velocityY;
         }
 
         updatePosition();
@@ -47,21 +58,21 @@ document.addEventListener("DOMContentLoaded", function() {
         const circle = document.createElement('div');
         circle.classList.add('circle');
         shapeContainer.appendChild(circle);
-        moveShape(circle, 2, 2);
+        moveShape(circle, storedVelocityX, storedVelocityY);
     }
 
     function createSquare() {
         const square = document.createElement('div');
         square.classList.add('square');
         shapeContainer.appendChild(square);
-        moveShape(square, 2, 2);
+        moveShape(square, storedVelocityX, storedVelocityY);
     }
 
     function createTriangle() {
         const triangle = document.createElement('div');
         triangle.classList.add('triangle');
         shapeContainer.appendChild(triangle);
-        moveShape(triangle, 2, 2);
+        moveShape(triangle, storedVelocityX, storedVelocityY);
     }
 
     function clearShapes() {
@@ -86,13 +97,21 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    startButton.addEventListener('click', function() {
+        if (paused) { // Check if animation is paused
+            paused = false; // Start the animation
+            handleShapeSelection(); // Create the selected shape
+        }
+    });
+
     pauseButton.addEventListener('click', function() {
         paused = true;
         cancelAnimationFrame(animationId);
+        // Store the current position and velocity
         storedPositionX = parseFloat(shapeContainer.firstElementChild.style.left);
         storedPositionY = parseFloat(shapeContainer.firstElementChild.style.top);
-        storedVelocityX = storedPositionX ? 2 : null;
-        storedVelocityY = storedPositionY ? 2 : null;
+        storedVelocityX = storedVelocityX;
+        storedVelocityY = storedVelocityY;
     });
 
     unpauseButton.addEventListener('click', function() {
@@ -101,9 +120,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         paused = false;
         handleShapeSelection();
+        // Resume animation from the stored position with the stored velocities
+        moveShape(shapeContainer.firstElementChild, storedVelocityX, storedVelocityY);
     });
 
     // Initial setup
-    handleShapeSelection();
     shapeSelector.addEventListener('change', handleShapeSelection);
 });
