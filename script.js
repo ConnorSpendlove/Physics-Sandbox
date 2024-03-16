@@ -1,37 +1,86 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const square = document.getElementById('square');
+    const shapeContainer = document.getElementById('shape-container');
     const box = document.getElementById('box');
+    const shapeSelector = document.getElementById('shape');
     const pauseButton = document.getElementById('pause');
     const unpauseButton = document.getElementById('unpause');
 
-    let positionX = 0;
-    let positionY = 0;
-    let velocityX = 2;
-    let velocityY = 2;
     let paused = false;
     let animationId;
 
-    function moveSquare() {
-        positionX += velocityX;
-        positionY += velocityY;
+    function moveShape(shape, velocityX, velocityY) {
+        let positionX = 0;
+        let positionY = 0;
 
-        const boxWidth = box.offsetWidth;
-        const boxHeight = box.offsetHeight;
-        const squareWidth = square.offsetWidth;
-        const squareHeight = square.offsetHeight;
+        function updatePosition() {
+            if (!paused) {
+                positionX += velocityX;
+                positionY += velocityY;
 
-        // Check collision with box edges
-        if (positionX <= 0 || positionX + squareWidth >= boxWidth) {
-            velocityX = -velocityX; // Reverse direction on X-axis
+                const boxWidth = box.offsetWidth;
+                const boxHeight = box.offsetHeight;
+                const shapeWidth = shape.offsetWidth;
+                const shapeHeight = shape.offsetHeight;
+
+                // Check collision with box edges
+                if (positionX <= 0 || positionX + shapeWidth >= boxWidth) {
+                    velocityX = -velocityX; // Reverse direction on X-axis
+                }
+                if (positionY <= 0 || positionY + shapeHeight >= boxHeight) {
+                    velocityY = -velocityY; // Reverse direction on Y-axis
+                }
+
+                shape.style.left = positionX + 'px';
+                shape.style.top = positionY + 'px';
+            }
+
+            animationId = requestAnimationFrame(updatePosition);
         }
-        if (positionY <= 0 || positionY + squareHeight >= boxHeight) {
-            velocityY = -velocityY; // Reverse direction on Y-axis
+
+        updatePosition();
+    }
+
+    function createCircle() {
+        const circle = document.createElement('div');
+        circle.classList.add('circle');
+        shapeContainer.appendChild(circle);
+        moveShape(circle, 2, 2);
+    }
+
+    function createSquare() {
+        const square = document.createElement('div');
+        square.classList.add('square');
+        shapeContainer.appendChild(square);
+        moveShape(square, 2, 2);
+    }
+
+    function createTriangle() {
+        const triangle = document.createElement('div');
+        triangle.classList.add('triangle');
+        shapeContainer.appendChild(triangle);
+        moveShape(triangle, 2, 2);
+    }
+
+    function clearShapes() {
+        shapeContainer.innerHTML = '';
+    }
+
+    function handleShapeSelection() {
+        clearShapes();
+        const selectedShape = shapeSelector.value;
+        switch (selectedShape) {
+            case 'circle':
+                createCircle();
+                break;
+            case 'square':
+                createSquare();
+                break;
+            case 'triangle':
+                createTriangle();
+                break;
+            default:
+                break;
         }
-
-        square.style.left = positionX + 'px';
-        square.style.top = positionY + 'px';
-
-        animationId = requestAnimationFrame(moveSquare);
     }
 
     pauseButton.addEventListener('click', function() {
@@ -44,10 +93,12 @@ document.addEventListener("DOMContentLoaded", function() {
             return; // Do nothing if animation is already running
         }
         paused = false;
-        moveSquare();
+        handleShapeSelection();
     });
 
-    // Start animation initially
-    moveSquare();
+    // Initial setup
+    handleShapeSelection();
+    shapeSelector.addEventListener('change', handleShapeSelection);
 });
+
 

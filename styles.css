@@ -1,13 +1,25 @@
 body, html {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
     margin: 0;
 }
 
 #container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: 100%;
+}
+
+#shape-selector {
+    margin-bottom: 10px;
+}
+
+#shape-container {
+    position: relative;
 }
 
 #box {
@@ -16,13 +28,39 @@ body, html {
     height: 200px;
     border: 2px solid black;
     overflow: hidden;
+    margin-bottom: 10px;
 }
 
-#square {
+.circle, .square, .triangle {
     position: absolute;
+    background-color: red;
+}
+
+.circle {
+    border-radius: 50%;
     width: 50px;
     height: 50px;
-    background-color: red;
-    left: 0;
-    top: 0;
+}
+
+.square {
+    width: 50px;
+    height: 50px;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 50px solid red;
+    position: absolute;
+}
+
+#buttons {
+    display: flex;
+    justify-content: center;
+}
+
+#buttons button {
+    margin-right: 10px;
 }

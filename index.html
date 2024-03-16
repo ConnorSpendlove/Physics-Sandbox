@@ -3,13 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trapped Square</title>
+    <title>Trapped Shapes</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="container">
+        <div id="shape-selector">
+            <label for="shape">Select a shape:</label>
+            <select id="shape">
+                <option value="circle">Circle</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+            </select>
+        </div>
         <div id="box">
-            <div id="square"></div>
+            <div id="shape-container"></div>
         </div>
         <div id="buttons">
             <button id="pause">Pause</button>
