@@ -64,3 +64,7 @@ body, html {
 #buttons button {
     margin-right: 10px;
 }
+
+.hide {
+    display: none;
+}

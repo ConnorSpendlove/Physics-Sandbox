@@ -2,9 +2,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const shapeContainer = document.getElementById('shape-container');
     const box = document.getElementById('box');
     const shapeSelector = document.getElementById('shape');
+    const shapeSelectorHeading = document.getElementById('shape-selector');
     const pauseButton = document.getElementById('pause');
     const unpauseButton = document.getElementById('unpause');
-    const startButton = document.getElementById('start'); // Reference to the start button
+    const startButton = document.getElementById('start'); 
+    const resetButton = document.getElementById('reset');// Reference to the start button
 
     let animationId;
     let paused = true; // Animation is paused initially
@@ -102,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function() {
             paused = false; // Start the animation
             handleShapeSelection(); // Create the selected shape
         }
+        shapeSelectorHeading.classList.add('hide')
     });
 
     pauseButton.addEventListener('click', function() {
@@ -126,4 +129,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Initial setup
     shapeSelector.addEventListener('change', handleShapeSelection);
+
+    resetButton.addEventListener('click', function() {
+        shapeSelectorHeading.classList.remove("hide");
+        paused = true; // Animation is paused initially
+        location.reload(); // Reload the page
+    });
 });
+
+
