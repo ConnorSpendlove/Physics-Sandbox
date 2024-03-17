@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const widthInput = document.getElementById('width');
     const heightInput = document.getElementById('height');
     const applySizeButton = document.getElementById('apply-size');
+    const restoreDefaultsButton = document.getElementById('restore-defaults');
     const shapeSelector = document.getElementById('shape');
     const shapeSelectorHeading = document.getElementById('shape-selector');
     const speedControl = document.getElementById('speed');
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (localStorage.getItem('height')) {
         heightInput.value = localStorage.getItem('height');
         box.style.height = heightInput.value + 'px';
+        
     }
 
     if (localStorage.getItem('shape')) {
@@ -124,31 +126,65 @@ document.addEventListener("DOMContentLoaded", function() {
          localStorage.setItem('shape', selectedShape);
     }
 
-    applySizeButton.addEventListener('click', function() {
-        let width = parseInt(widthInput.value);
-        let height = parseInt(heightInput.value);
-    
-        // Cap width and height at 1000 pixels if exceeded
-        width = Math.min(width, 1000);
-        height = Math.min(height, 1000);
+   // Retrieve last width and height from local storage or set default values
+   let lastWidth = parseInt(localStorage.getItem('lastWidth')) || window.innerWidth * 0.3;
+   let lastHeight = parseInt(localStorage.getItem('lastHeight')) || window.innerHeight * 0.3;
 
-        if (width === 1000 && parseInt(widthInput.value) > 1000 || height === 1000 && parseInt(heightInput.value) > 1000) {
-            alert('Width and height cannot exceed 1000 pixels.');
-            width = Math.min(width, 1000);
-            height = Math.min(height, 1000);
-        }
-    
-        // Apply size only if within the limit
-        box.style.width = width + 'px';
-        box.style.height = height + 'px';
-        // Save width and height to localStorage
-        localStorage.setItem('width', width);
-        localStorage.setItem('height', height);
-    
-        // Update input values in case they were capped
-        widthInput.value = width;
-        heightInput.value = height;
-    });
+   // Set initial values for width and height inputs
+   widthInput.value = lastWidth;
+   heightInput.value = lastHeight;
+
+   // Set initial size for the box
+   box.style.width = lastWidth + 'px';
+   box.style.height = lastHeight + 'px';
+
+   // Add event listener for apply size button
+   applySizeButton.addEventListener('click', applySize);
+
+   // Add event listener for restore defaults button
+   restoreDefaultsButton.addEventListener('click', restoreDefaults);
+
+   function applySize() {
+       let width = parseInt(widthInput.value);
+       let height = parseInt(heightInput.value);
+
+       // Calculate maximum width and height based on screen size
+       const maxScreenWidth = window.innerWidth * 0.8; // Use 80% of the screen width
+       const maxScreenHeight = window.innerHeight * 0.8; // Use 80% of the screen height
+
+       // Cap width and height at maximum screen dimensions
+       width = Math.min(width, maxScreenWidth);
+       height = Math.min(height, maxScreenHeight);
+
+       // Apply size only if within the limit
+       box.style.width = width + 'px';
+       box.style.height = height + 'px';
+       // Save width and height to localStorage
+       localStorage.setItem('lastWidth', width);
+       localStorage.setItem('lastHeight', height);
+
+       // Update input values in case they were capped
+       widthInput.value = width;
+       heightInput.value = height;
+   }
+
+   function restoreDefaults() {
+       // Calculate default width and height based on screen size
+       const defaultWidth = window.innerWidth * 0.3;
+       const defaultHeight = window.innerHeight * 0.3;
+
+       // Set width and height inputs to default values
+       widthInput.value = defaultWidth;
+       heightInput.value = defaultHeight;
+
+       // Apply default size to the box
+       box.style.width = defaultWidth + 'px';
+       box.style.height = defaultHeight + 'px';
+
+       // Save default width and height to localStorage
+       localStorage.setItem('lastWidth', defaultWidth);
+       localStorage.setItem('lastHeight', defaultHeight);
+   }
     
     startButton.addEventListener('click', function() {
         if (paused) { // Check if animation is paused
