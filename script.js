@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const box = document.getElementById('box');
     const shapeSelector = document.getElementById('shape');
     const shapeSelectorHeading = document.getElementById('shape-selector');
+    const speedControl = document.getElementById('speed');
     const pauseButton = document.getElementById('pause');
     const unpauseButton = document.getElementById('unpause');
     const startButton = document.getElementById('start'); 
@@ -21,8 +22,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         function updatePosition() {
             if (!paused) {
-                positionX += velocityX;
-                positionY += velocityY;
+                positionX += velocityX * (speedControl.value / 5); // Adjust velocity based on speed control value
+                positionY += velocityY * (speedControl.value / 5);
 
                 const boxWidth = box.offsetWidth;
                 const boxHeight = box.offsetHeight;

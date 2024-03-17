@@ -11,10 +11,15 @@
         <div id="shape-selector" class = "">
             <label for="shape">Select a shape:</label>
             <select id="shape" >
+                <option id = "disabled" value="" selected disabled>Select a shape</option>
                 <option value="circle">Circle</option>
                 <option value="square">Square</option>
                 <option value="triangle">Triangle</option>
             </select>
+        </div>
+        <div id="speed-control">
+            <label for="speed" id = "select-speed">Select speed:</label>
+            <input type="range" id="speed" min="1" max="10" value="5">
         </div>
         <div id="box">
             <div id="shape-container"></div>
