@@ -15,20 +15,16 @@ body, html {
     height: 100%;
 }
 
+button {
+    background-color: grey;
+    color:white;
+}
+
 #shape-selector {
     margin-bottom: 10px;
     color: white;
 }
 
-#shape {
-    background-color: grey;
-    color: white;
-}
-
-#apply-size {
-    background-color: grey;
-    color: white;
-}
 
 #shape-container {
     position: relative;
@@ -75,8 +71,6 @@ body, html {
 
 #buttons button {
     margin-right: 10px;
-    background-color: grey;
-    color: aliceblue;
 }
 
 .hide {
