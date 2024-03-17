@@ -25,6 +25,11 @@ body, html {
     color: white;
 }
 
+#apply-size {
+    background-color: grey;
+    color: white;
+}
+
 #shape-container {
     position: relative;
 }
@@ -84,4 +89,24 @@ body, html {
 
 #speed-display {
     color:white;
+}
+
+#height-text {
+    color:white;
+
+}
+
+#width-text {
+    color:white;
+
+}
+
+#width {
+    color: white;
+    background-color: black;
+}
+
+#height {
+    color: white;
+    background-color: black;
 }

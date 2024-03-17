@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
     const shapeContainer = document.getElementById('shape-container');
     const box = document.getElementById('box');
+    const widthInput = document.getElementById('width');
+    const heightInput = document.getElementById('height');
+    const applySizeButton = document.getElementById('apply-size');
     const shapeSelector = document.getElementById('shape');
     const shapeSelectorHeading = document.getElementById('shape-selector');
     const speedControl = document.getElementById('speed');
@@ -16,6 +19,21 @@ document.addEventListener("DOMContentLoaded", function() {
     let storedPositionY = 0;
     let storedVelocityX = 2;
     let storedVelocityY = 2;
+
+    if (localStorage.getItem('speed')) {
+        speedControl.value = localStorage.getItem('speed');
+        speedDisplay.textContent = speedControl.value;
+    }
+
+    if (localStorage.getItem('width')) {
+        widthInput.value = localStorage.getItem('width');
+        box.style.width = widthInput.value + 'px';
+    }
+
+    if (localStorage.getItem('height')) {
+        heightInput.value = localStorage.getItem('height');
+        box.style.height = heightInput.value + 'px';
+    }
 
     function moveShape(shape, velocityX, velocityY) {
         let positionX = storedPositionX;
@@ -101,6 +119,16 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    applySizeButton.addEventListener('click', function() {
+        const width = parseInt(widthInput.value);
+        const height = parseInt(heightInput.value);
+        box.style.width = width + 'px';
+        box.style.height = height + 'px';
+         // Save width and height to localStorage
+         localStorage.setItem('width', width);
+         localStorage.setItem('height', height);
+    });
+
     startButton.addEventListener('click', function() {
         if (paused) { // Check if animation is paused
             paused = false; // Start the animation
@@ -141,6 +169,11 @@ document.addEventListener("DOMContentLoaded", function() {
      // Update speed display when the speed control value changes
      speedControl.addEventListener('input', function() {
         speedDisplay.textContent = speedControl.value;
+        localStorage.setItem('speed', speedControl.value);
+    });
+
+     shapeSelector.addEventListener('change', function() {
+        startButton.disabled = shapeSelector.value === ''; // Disable start button if no shape is selected
     });
 });
 
