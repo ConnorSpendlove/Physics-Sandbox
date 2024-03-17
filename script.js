@@ -8,8 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const shapeSelectorHeading = document.getElementById('shape-selector');
     const speedControl = document.getElementById('speed');
     const speedDisplay = document.getElementById('speed-display'); // Reference to the speed display element
-    const pauseButton = document.getElementById('pause');
-    const unpauseButton = document.getElementById('unpause');
+    const controlButton = document.getElementById('control-button');
     const startButton = document.getElementById('start'); 
     const resetButton = document.getElementById('reset');// Reference to the start button
 
@@ -143,25 +142,23 @@ document.addEventListener("DOMContentLoaded", function() {
         shapeSelectorHeading.classList.add('hide')
     });
 
-    pauseButton.addEventListener('click', function() {
-        paused = true;
-        cancelAnimationFrame(animationId);
-        // Store the current position and velocity
-        storedPositionX = parseFloat(shapeContainer.firstElementChild.style.left);
-        storedPositionY = parseFloat(shapeContainer.firstElementChild.style.top);
-        storedVelocityX = storedVelocityX;
-        storedVelocityY = storedVelocityY;
-    });
-
-    unpauseButton.addEventListener('click', function() {
-        if (!paused) {
-            return; // Do nothing if animation is already running
+    function toggleAnimation() {
+        paused = !paused;
+        if (paused) {
+            controlButton.textContent = 'Unpause';
+            cancelAnimationFrame(animationId);
+            // Store the current position and velocity
+            storedPositionX = parseFloat(shapeContainer.firstElementChild.style.left);
+            storedPositionY = parseFloat(shapeContainer.firstElementChild.style.top);
+            storedVelocityX = storedVelocityX;
+            storedVelocityY = storedVelocityY;
+        } else {
+            controlButton.textContent = 'Pause';
+            handleShapeSelection();
+            // Resume animation from the stored position with the stored velocities
+            moveShape(shapeContainer.firstElementChild, storedVelocityX, storedVelocityY);
         }
-        paused = false;
-        handleShapeSelection();
-        // Resume animation from the stored position with the stored velocities
-        moveShape(shapeContainer.firstElementChild, storedVelocityX, storedVelocityY);
-    });
+    }
 
     // Initial setup
     shapeSelector.addEventListener('change', handleShapeSelection);
@@ -177,6 +174,8 @@ document.addEventListener("DOMContentLoaded", function() {
         speedDisplay.textContent = speedControl.value;
         localStorage.setItem('speed', speedControl.value);
     });
+
+    controlButton.addEventListener('click', toggleAnimation);
 
      shapeSelector.addEventListener('change', function() {
         startButton.disabled = shapeSelector.value === ''; // Disable start button if no shape is selected
