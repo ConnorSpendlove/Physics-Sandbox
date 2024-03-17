@@ -125,15 +125,31 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     applySizeButton.addEventListener('click', function() {
-        const width = parseInt(widthInput.value);
-        const height = parseInt(heightInput.value);
+        let width = parseInt(widthInput.value);
+        let height = parseInt(heightInput.value);
+    
+        // Cap width and height at 1000 pixels if exceeded
+        width = Math.min(width, 1000);
+        height = Math.min(height, 1000);
+
+        if (width === 1000 && parseInt(widthInput.value) > 1000 || height === 1000 && parseInt(heightInput.value) > 1000) {
+            alert('Width and height cannot exceed 1000 pixels.');
+            width = Math.min(width, 1000);
+            height = Math.min(height, 1000);
+        }
+    
+        // Apply size only if within the limit
         box.style.width = width + 'px';
         box.style.height = height + 'px';
-         // Save width and height to localStorage
-         localStorage.setItem('width', width);
-         localStorage.setItem('height', height);
+        // Save width and height to localStorage
+        localStorage.setItem('width', width);
+        localStorage.setItem('height', height);
+    
+        // Update input values in case they were capped
+        widthInput.value = width;
+        heightInput.value = height;
     });
-
+    
     startButton.addEventListener('click', function() {
         if (paused) { // Check if animation is paused
             paused = false; // Start the animation
