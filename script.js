@@ -35,6 +35,10 @@ document.addEventListener("DOMContentLoaded", function() {
         box.style.height = heightInput.value + 'px';
     }
 
+    if (localStorage.getItem('shape')) {
+        shapeSelector.value = localStorage.getItem('shape');
+    }
+
     function moveShape(shape, velocityX, velocityY) {
         let positionX = storedPositionX;
         let positionY = storedPositionY;
@@ -117,6 +121,8 @@ document.addEventListener("DOMContentLoaded", function() {
             default:
                 break;
         }
+         // Save selected shape to localStorage
+         localStorage.setItem('shape', selectedShape);
     }
 
     applySizeButton.addEventListener('click', function() {
