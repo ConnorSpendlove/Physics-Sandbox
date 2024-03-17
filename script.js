@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const shapeColorInput = document.getElementById('shape-color')
     const speedControl = document.getElementById('speed');
     const speedDisplay = document.getElementById('speed-display'); // Reference to the speed display element
+    const shapeSizeInput = document.getElementById('shape-size');
     const controlButton = document.getElementById('control-button');
     const startButton = document.getElementById('start'); 
     const resetButton = document.getElementById('reset');// Reference to the start button
@@ -45,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (localStorage.getItem('shapeColor')) {
         shapeColorInput.value = localStorage.getItem('shapeColor');
     }
+    
 
     function moveShape(shape, velocityX, velocityY) {
         let positionX = storedPositionX;
@@ -87,29 +89,53 @@ document.addEventListener("DOMContentLoaded", function() {
         updatePosition();
     }
 
-    function createCircle(color) {
+    function updateShapeSize(shape, size) {
+        // Update the width and height of the shape element
+        shape.style.width = size + 'px';
+        shape.style.height = size + 'px';
+    }
+
+    function createCircle(color, size) {
         const circle = document.createElement('div');
-        circle.classList.add('circle');
+        circle.classList.add('circle', 'shape');
         circle.style.backgroundColor = color;
         shapeContainer.appendChild(circle);
-        moveShape(circle, storedVelocityX, storedVelocityY);
+        updateShapeSize(circle, size);
+        moveShape(circle, storedVelocityX, storedVelocityY); // Move the circle immediately after creation
     }
 
-    function createSquare(color) {
+    function createSquare(color, size) {
         const square = document.createElement('div');
-        square.classList.add('square');
+        square.classList.add('square', 'shape');
         square.style.backgroundColor = color;
         shapeContainer.appendChild(square);
-        moveShape(square, storedVelocityX, storedVelocityY);
+        updateShapeSize(square, size);
+        moveShape(square, storedVelocityX, storedVelocityY); // Move the square immediately after creation
     }
 
-    function createTriangle(color) {
+    function createTriangle(color, size) {
         const triangle = document.createElement('div');
-        triangle.classList.add('triangle');
-        triangle.style.borderBottomColor = color;
+        triangle.classList.add('triangle', 'shape');
+        triangle.style.backgroundColor = color;
         shapeContainer.appendChild(triangle);
-        moveShape(triangle, storedVelocityX, storedVelocityY);
+        updateShapeSize(triangle, size);
+        moveShape(triangle, storedVelocityX, storedVelocityY); // Move the triangle immediately after creation
     }
+      shapeSizeInput.addEventListener('input', function() {
+        const size = parseInt(shapeSizeInput.value);
+
+        const shapes = shapeContainer.querySelectorAll('.shape');
+        shapes.forEach(shape => {
+            updateShapeSize(shape, size);
+      });
+      // Save the shape size to local storage
+    localStorage.setItem('shapeSize', size);
+    });
+
+    // Retrieve last shape size from local storage or set a default value
+    let lastShapeSize = parseInt(localStorage.getItem('shapeSize')) || 50;
+
+    shapeSizeInput.value = lastShapeSize;
 
     function clearShapes() {
         shapeContainer.innerHTML = '';
@@ -121,13 +147,13 @@ document.addEventListener("DOMContentLoaded", function() {
         const shapeColor = shapeColorInput.value;
         switch (selectedShape) {
             case 'circle':
-                createCircle(shapeColor);
+                createCircle(shapeColor, parseInt(shapeSizeInput.value)); // Pass the size to the createCircle function
                 break;
             case 'square':
-                createSquare(shapeColor);
+                createSquare(shapeColor, parseInt(shapeSizeInput.value)); // Pass the size to the createSquare function
                 break;
             case 'triangle':
-                createTriangle(shapeColor);
+                createTriangle(shapeColor, parseInt(shapeSizeInput.value)); // Pass the size to the createTriangle function
                 break;
             default:
                 break;
