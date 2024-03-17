@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const restoreDefaultsButton = document.getElementById('restore-defaults');
     const shapeSelector = document.getElementById('shape');
     const shapeSelectorHeading = document.getElementById('shape-selector');
+    const shapeColorInput = document.getElementById('shape-color')
     const speedControl = document.getElementById('speed');
     const speedDisplay = document.getElementById('speed-display'); // Reference to the speed display element
     const controlButton = document.getElementById('control-button');
@@ -38,6 +39,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (localStorage.getItem('shape')) {
         shapeSelector.value = localStorage.getItem('shape');
+    }
+
+    if (localStorage.getItem('shapeColor')) {
+        shapeColorInput.value = localStorage.getItem('shapeColor');
     }
 
     function moveShape(shape, velocityX, velocityY) {
@@ -81,23 +86,26 @@ document.addEventListener("DOMContentLoaded", function() {
         updatePosition();
     }
 
-    function createCircle() {
+    function createCircle(color) {
         const circle = document.createElement('div');
         circle.classList.add('circle');
+        circle.style.backgroundColor = color;
         shapeContainer.appendChild(circle);
         moveShape(circle, storedVelocityX, storedVelocityY);
     }
 
-    function createSquare() {
+    function createSquare(color) {
         const square = document.createElement('div');
         square.classList.add('square');
+        square.style.backgroundColor = color;
         shapeContainer.appendChild(square);
         moveShape(square, storedVelocityX, storedVelocityY);
     }
 
-    function createTriangle() {
+    function createTriangle(color) {
         const triangle = document.createElement('div');
         triangle.classList.add('triangle');
+        triangle.style.borderBottomColor = color;
         shapeContainer.appendChild(triangle);
         moveShape(triangle, storedVelocityX, storedVelocityY);
     }
@@ -109,21 +117,24 @@ document.addEventListener("DOMContentLoaded", function() {
     function handleShapeSelection() {
         clearShapes();
         const selectedShape = shapeSelector.value;
+        const shapeColor = shapeColorInput.value;
         switch (selectedShape) {
             case 'circle':
-                createCircle();
+                createCircle(shapeColor);
                 break;
             case 'square':
-                createSquare();
+                createSquare(shapeColor);
                 break;
             case 'triangle':
-                createTriangle();
+                createTriangle(shapeColor);
                 break;
             default:
                 break;
         }
          // Save selected shape to localStorage
          localStorage.setItem('shape', selectedShape);
+         // Save selected color to localStorage
+         localStorage.setItem('shapeColor', shapeColor);
     }
 
    // Retrieve last width and height from local storage or set default values
@@ -147,6 +158,12 @@ document.addEventListener("DOMContentLoaded", function() {
    function applySize() {
        let width = parseInt(widthInput.value);
        let height = parseInt(heightInput.value);
+
+       // Check if width or height exceeds 1000
+       if (width > 1000 || height > 1000) {
+           alert('Width and height cannot exceed 1000 pixels.');
+           return;
+       }
 
        // Calculate maximum width and height based on screen size
        const maxScreenWidth = window.innerWidth * 0.8; // Use 80% of the screen width
@@ -233,5 +250,3 @@ document.addEventListener("DOMContentLoaded", function() {
         startButton.disabled = shapeSelector.value === ''; // Disable start button if no shape is selected
     });
 });
-
-
