@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const shapeSelector = document.getElementById('shape');
     const shapeSelectorHeading = document.getElementById('shape-selector');
     const speedControl = document.getElementById('speed');
+    const speedDisplay = document.getElementById('speed-display'); // Reference to the speed display element
     const pauseButton = document.getElementById('pause');
     const unpauseButton = document.getElementById('unpause');
     const startButton = document.getElementById('start'); 
@@ -135,6 +136,11 @@ document.addEventListener("DOMContentLoaded", function() {
         shapeSelectorHeading.classList.remove("hide");
         paused = true; // Animation is paused initially
         location.reload(); // Reload the page
+    });
+
+     // Update speed display when the speed control value changes
+     speedControl.addEventListener('input', function() {
+        speedDisplay.textContent = speedControl.value;
     });
 });
 
