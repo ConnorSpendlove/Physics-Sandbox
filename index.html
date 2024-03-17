@@ -33,8 +33,11 @@
             <input type="range" id="speed" min="0" max="100" value="5">
             <span id="speed-display">5</span>
         </div>
-        <label for="shape-size" id = "shape-size-text">Shape Size:</label>
-        <input type="range" id="shape-size" min="1" max="200" value="50">
+        <div id="shape-size-container">
+            <label for="shape-size" id="shape-size-label">Shape Size:</label>
+            <input type="range" min="1" max="175" value="50" class="slider" id="shape-size">
+            <span id="shape-size-display">50</span>
+          </div>
         <div id="box" class="">
             <div id="shape-container"></div>
         </div>

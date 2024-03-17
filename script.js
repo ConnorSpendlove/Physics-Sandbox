@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const speedControl = document.getElementById('speed');
     const speedDisplay = document.getElementById('speed-display'); // Reference to the speed display element
     const shapeSizeInput = document.getElementById('shape-size');
+    const shapeSizeDisplay = document.getElementById('shape-size-display');
     const controlButton = document.getElementById('control-button');
     const startButton = document.getElementById('start'); 
     const resetButton = document.getElementById('reset');// Reference to the start button
@@ -45,6 +46,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     if (localStorage.getItem('shapeColor')) {
         shapeColorInput.value = localStorage.getItem('shapeColor');
+    }
+
+    if (localStorage.getItem('shapeSize')) {
+        const size = parseInt(localStorage.getItem('shapeSize'));
+        shapeSizeInput.value = size;
+
+        const shapes = shapeContainer.querySelectorAll('.shape');
+        shapes.forEach(shape => {
+            updateShapeSize(shape, size);
+        });
     }
     
 
@@ -121,16 +132,36 @@ document.addEventListener("DOMContentLoaded", function() {
         updateShapeSize(triangle, size);
         moveShape(triangle, storedVelocityX, storedVelocityY); // Move the triangle immediately after creation
     }
-      shapeSizeInput.addEventListener('input', function() {
-        const size = parseInt(shapeSizeInput.value);
-
+  
+    // Add event listener for shape size input changes
+    shapeSizeInput.addEventListener('input', function() {
+        // Update the shape size display
+        shapeSizeDisplay.textContent = shapeSizeInput.value;
+    
+        // Save the shape size to local storage
+        localStorage.setItem('shapeSize', shapeSizeInput.value);
+    
+        // Update the size of existing shapes immediately
         const shapes = shapeContainer.querySelectorAll('.shape');
         shapes.forEach(shape => {
-            updateShapeSize(shape, size);
-      });
-      // Save the shape size to local storage
-    localStorage.setItem('shapeSize', size);
+            shape.style.width = shapeSizeInput.value + 'px';
+            shape.style.height = shapeSizeInput.value + 'px';
+        });
     });
+    
+    // Retrieve the shape size from local storage on page load
+    const savedShapeSize = localStorage.getItem('shapeSize');
+    if (savedShapeSize) {
+        shapeSizeInput.value = savedShapeSize;
+        shapeSizeDisplay.textContent = savedShapeSize;
+    
+        // Update the size of existing shapes based on the retrieved value
+        const shapes = shapeContainer.querySelectorAll('.shape');
+        shapes.forEach(shape => {
+            shape.style.width = savedShapeSize + 'px';
+            shape.style.height = savedShapeSize + 'px';
+        });
+    }
 
     // Retrieve last shape size from local storage or set a default value
     let lastShapeSize = parseInt(localStorage.getItem('shapeSize')) || 50;

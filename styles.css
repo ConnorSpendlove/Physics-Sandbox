@@ -1,3 +1,7 @@
+:root {
+    --white-color: #ffffff;
+  }
+
 body, html {
     display: flex;
     justify-content: center;
@@ -84,45 +88,55 @@ button:hover {
 }
 
 #select-speed {
-    color:white;
+    color: var(--white-color);
 }
 
 #speed-display {
-    color:white;
+    color: var(--white-color);
 }
 
 #height-text {
-    color:white;
+    color: var(--white-color);
 
 }
 
 #width-text {
-    color:white;
+    color: var(--white-color);
 
 }
 
 #width {
-    color: white;
+    color: var(--white-color);
     background-color: black;
 }
 
 #height {
-    color: white;
+    color: var(--white-color);
     background-color: black;
 }
 
 #color-text {
-    color:white;
+    color: var(--white-color);
 }
 
 #color {
-    color:white;
+    color: var(--white-color);
 }
 
 #select-container-text {
-    color:white;
+    color: var(--white-color);
 }
 
-#shape-size-text{
-    color:white;
+#shape-size-display {
+    color: var(--white-color);
 }
+
+#shape-size-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  #shape-size-label {
+    margin-right: 10px;
+    color: var(--white-color);
+  }
