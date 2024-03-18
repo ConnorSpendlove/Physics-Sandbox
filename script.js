@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
         moveShape(triangle, storedVelocityX, storedVelocityY); // Move the triangle immediately after creation
     }
   
-    // Add event listener for shape size input changes
+    // event listener for shape size input changes
     shapeSizeInput.addEventListener('input', function() {
         // Update the shape size display
         shapeSizeDisplay.textContent = shapeSizeInput.value;
