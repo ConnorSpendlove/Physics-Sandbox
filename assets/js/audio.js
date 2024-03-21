@@ -44,7 +44,8 @@ oscillator.frequency.setValueAtTime(randomFrequency, audioContext.currentTime);
 function updateVolumeDisplay() {
     const volumeSlider = document.getElementById('volumeSlider');
     const volumeDisplay = document.getElementById('volumeDisplay');
-    volumeDisplay.textContent = volumeSlider.value;
+    const volume = parseFloat(volumeSlider.value).toFixed(2); // Format volume to 2 decimal places
+    volumeDisplay.textContent = volume;
 }
 
 // Add event listener to update volume when slider value changes
