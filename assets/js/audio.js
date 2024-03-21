@@ -48,11 +48,29 @@ function updateVolumeDisplay() {
     volumeDisplay.textContent = volume;
 }
 
+// Function to save volume to local storage
+function saveVolumeToLocalStorage() {
+    const volume = parseFloat(document.getElementById('volumeSlider').value);
+    localStorage.setItem('volume', volume);
+}
+
+// Function to load volume from local storage
+function loadVolumeFromLocalStorage() {
+    const volume = localStorage.getItem('volume');
+    if (volume !== null) {
+        document.getElementById('volumeSlider').value = volume;
+        updateVolumeDisplay(); // Update volume display
+    }
+}
+
+
 // Add event listener to update volume when slider value changes
 document.getElementById('volumeSlider').addEventListener('input', function() {
     const volume = parseFloat(this.value);
     gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-    updateVolumeDisplay()
+    updateVolumeDisplay() // Update volume display
+    saveVolumeToLocalStorage(); // Save volume to local storage
 });
+loadVolumeFromLocalStorage();
 
 export { playRandomNote, initAudio };
