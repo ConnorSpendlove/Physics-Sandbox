@@ -40,10 +40,18 @@ oscillator.frequency.setValueAtTime(randomFrequency, audioContext.currentTime);
     oscillator.stop(audioContext.currentTime + 0.05); // Adjust note duration as needed
 }
 
+// Function to update volume display
+function updateVolumeDisplay() {
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volumeDisplay = document.getElementById('volumeDisplay');
+    volumeDisplay.textContent = volumeSlider.value;
+}
+
 // Add event listener to update volume when slider value changes
 document.getElementById('volumeSlider').addEventListener('input', function() {
     const volume = parseFloat(this.value);
     gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+    updateVolumeDisplay()
 });
 
 export { playRandomNote, initAudio };

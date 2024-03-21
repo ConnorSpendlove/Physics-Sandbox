@@ -135,6 +135,11 @@ button:hover {
     color: var(--white-color);
 }
 
+#volumeDisplay {
+    color: var(--white-color);
+}
+
+
 #shape-size-container {
     display: flex;
     align-items: center;
