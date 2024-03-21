@@ -1,3 +1,4 @@
+import { playRandomNote } from './audio.js';
 document.addEventListener("DOMContentLoaded", function() {
     const shapeContainer = document.getElementById('shape-container');
     const box = document.getElementById('box');
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const controlButton = document.getElementById('control-button');
     const startButton = document.getElementById('start'); 
     const resetButton = document.getElementById('reset');// Reference to the start button
+
 
     let animationId;
     let paused = true; // Animation is paused initially
@@ -57,48 +59,53 @@ document.addEventListener("DOMContentLoaded", function() {
             updateShapeSize(shape, size);
         });
     }
-    
 
-    function moveShape(shape, velocityX, velocityY) {
-        let positionX = storedPositionX;
-        let positionY = storedPositionY;
+ 
 
-        function updatePosition() {
-            if (!paused) {
-                positionX += velocityX * (speedControl.value / 5); // Adjust velocity based on speed control value
-                positionY += velocityY * (speedControl.value / 5);
+function moveShape(shape, velocityX, velocityY) {
+    let positionX = storedPositionX;
+    let positionY = storedPositionY;
 
-                const boxWidth = box.offsetWidth;
-                const boxHeight = box.offsetHeight;
-                const shapeWidth = shape.offsetWidth;
-                const shapeHeight = shape.offsetHeight;
+    function updatePosition() {
+        if (!paused) {
+            positionX += velocityX * (speedControl.value / 5);
+            positionY += velocityY * (speedControl.value / 5);
 
-                // Check collision with box edges
-                if (positionX <= 0 || positionX + shapeWidth >= boxWidth) {
-                    velocityX = -velocityX; // Reverse direction on X-axis
-                }
-                if (positionY <= 0 || positionY + shapeHeight >= boxHeight) {
-                    velocityY = -velocityY; // Reverse direction on Y-axis
-                }
+            const boxWidth = box.offsetWidth;
+            const boxHeight = box.offsetHeight;
+            const shapeWidth = shape.offsetWidth;
+            const shapeHeight = shape.offsetHeight;
 
-                shape.style.left = positionX + 'px';
-                shape.style.top = positionY + 'px';
+            // Check collision with box edges
+            if (positionX <= 0 || positionX + shapeWidth >= boxWidth) {
+                velocityX = -velocityX; // Reverse direction on X-axis
+                playRandomNote();
+                
+            }
+            if (positionY <= 0 || positionY + shapeHeight >= boxHeight) {
+                velocityY = -velocityY; // Reverse direction on Y-axis
+                playRandomNote();
+                
             }
 
-            animationId = requestAnimationFrame(function() {
-                updatePosition();
-                updateVelocity();
-            });
+            shape.style.left = positionX + 'px';
+            shape.style.top = positionY + 'px';
         }
 
-        function updateVelocity() {
-            // This function ensures that the velocity remains constant
-            storedVelocityX = velocityX;
-            storedVelocityY = velocityY;
-        }
-
-        updatePosition();
+        animationId = requestAnimationFrame(function() {
+            updatePosition();
+            updateVelocity();
+        });
     }
+
+    function updateVelocity() {
+        // This function ensures that the velocity remains constant
+        storedVelocityX = velocityX;
+        storedVelocityY = velocityY;
+    }
+
+    updatePosition();
+}
 
     function updateShapeSize(shape, size) {
         // Update the width and height of the shape element
@@ -216,12 +223,6 @@ document.addEventListener("DOMContentLoaded", function() {
    function applySize() {
        let width = parseInt(widthInput.value);
        let height = parseInt(heightInput.value);
-
-       // Check if width or height exceeds 1000
-       if (width > 1000 || height > 1000) {
-           alert('Width and height cannot exceed 1000 pixels.');
-           return;
-       }
 
        // Calculate maximum width and height based on screen size
        const maxScreenWidth = window.innerWidth * 0.8; // Use 80% of the screen width

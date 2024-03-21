@@ -131,6 +131,10 @@ button:hover {
     color: var(--white-color);
 }
 
+#jiggle-box {
+    color: var(--white-color);
+}
+
 #shape-size-container {
     display: flex;
     align-items: center;
