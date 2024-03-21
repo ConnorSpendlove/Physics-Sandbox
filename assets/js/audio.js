@@ -101,11 +101,22 @@ function loadVolumeFromLocalStorage() {
 
 // Add event listener to update volume when slider value changes
 document.getElementById('volumeSlider').addEventListener('input', function() {
-    const volume = parseFloat(this.value);
-    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-    updateVolumeDisplay(); // Update volume display
-    saveVolumeToLocalStorage(); // Save volume to local storage
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volume = parseFloat(volumeSlider.value);
+
+    // If the mute button is not pressed, allow setting the volume
+    if (!isMuted) {
+        // Ensure volume is not set to 0
+        if (volume === 0) {
+            // If volume is 0, set it to a small non-zero value
+            volumeSlider.value = 0.01;
+        }
+        gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
+        updateVolumeDisplay(); // Update volume display
+        saveVolumeToLocalStorage(); // Save volume to local storage
+    }
 });
+
 loadVolumeFromLocalStorage();
 
 // Add event listener to toggle mute/unmute when the mute button is clicked
