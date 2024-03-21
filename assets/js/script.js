@@ -19,12 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const resetButton = document.getElementById('reset');// Reference to the start button
 
 
-    let animationId;
-    let paused = true; // Animation is paused initially
-    let storedPositionX = 0;
-    let storedPositionY = 0;
-    let storedVelocityX = 2;
-    let storedVelocityY = 2;
+   
 
     if (localStorage.getItem('speed')) {
         speedControl.value = localStorage.getItem('speed');
@@ -61,51 +56,66 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
  
-
+    let animationId;
+    let paused = true; // Animation is paused initially
+    let storedPositionX = 0;
+    let storedPositionY = 0;
+    let storedVelocityX = 2;
+    let storedVelocityY = 2;
+    let currentShape = null;
+// Function to move a shape
 function moveShape(shape, velocityX, velocityY) {
-    let positionX = storedPositionX;
-    let positionY = storedPositionY;
+    // Check if there is already a shape being animated
+    if (currentShape) {
+        // Stop the animation of the current shape
+        cancelAnimationFrame(currentShape.animationId);
+    }
+
+    let positionX = storedPositionX || 0;
+    let positionY = storedPositionY || 0;
+
+    function updateVelocity() {
+        // Reverse velocity when hitting the wall
+        const boxWidth = box.offsetWidth;
+        const boxHeight = box.offsetHeight;
+        const shapeWidth = shape.offsetWidth;
+        const shapeHeight = shape.offsetHeight;
+
+        if (positionX <= 0 || positionX + shapeWidth >= boxWidth) {
+            velocityX = -velocityX; // Reverse direction on X-axis
+            playRandomNote();
+        }
+        if (positionY <= 0 || positionY + shapeHeight >= boxHeight) {
+            velocityY = -velocityY; // Reverse direction on Y-axis
+            playRandomNote();
+        }
+        storedVelocityX = velocityX;
+        storedVelocityY = velocityY;
+    }
 
     function updatePosition() {
         if (!paused) {
             positionX += velocityX * (speedControl.value / 5);
             positionY += velocityY * (speedControl.value / 5);
 
-            const boxWidth = box.offsetWidth;
-            const boxHeight = box.offsetHeight;
-            const shapeWidth = shape.offsetWidth;
-            const shapeHeight = shape.offsetHeight;
-
-            // Check collision with box edges
-            if (positionX <= 0 || positionX + shapeWidth >= boxWidth) {
-                velocityX = -velocityX; // Reverse direction on X-axis
-                playRandomNote();
-                
-            }
-            if (positionY <= 0 || positionY + shapeHeight >= boxHeight) {
-                velocityY = -velocityY; // Reverse direction on Y-axis
-                playRandomNote();
-                
-            }
+            updateVelocity(); // Update velocity based on collision with box edges
 
             shape.style.left = positionX + 'px';
             shape.style.top = positionY + 'px';
         }
 
-        animationId = requestAnimationFrame(function() {
-            updatePosition();
-            updateVelocity();
-        });
+        currentShape.animationId = requestAnimationFrame(updatePosition);
     }
 
-    function updateVelocity() {
-        // This function ensures that the velocity remains constant
-        storedVelocityX = velocityX;
-        storedVelocityY = velocityY;
-    }
-
+    // Start animation for the current shape
+    currentShape = { shape, velocityX, velocityY, animationId: null };
+    storedPositionX = positionX;
+    storedPositionY = positionY;
+    storedVelocityX = velocityX;
+    storedVelocityY = velocityY;
     updatePosition();
 }
+
 
     function updateShapeSize(shape, size) {
         // Update the width and height of the shape element
