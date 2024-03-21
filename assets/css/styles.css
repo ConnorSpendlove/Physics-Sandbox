@@ -149,3 +149,21 @@ button:hover {
     margin-right: 10px;
     color: var(--white-color);
   }
+
+  /* Style the mute button */
+#muteButton {
+    cursor: pointer; 
+    display: inline-block; /* Ensure it takes up space */
+    margin-left: 10px;
+}
+
+#muteIcon {
+    font-size: 17px; 
+    color: #ffffff; 
+}
+
+#muteIcon:hover {
+    color:aqua; 
+    transition: ease-in-out 0.2s;
+}
+
