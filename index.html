@@ -9,18 +9,55 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden; /* Hide overflow to prevent scrollbars */
+        }
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place shapes behind other content */
+        }
+        .shape {
+            position: absolute;
+            opacity: 0.5; /* Set opacity */
+        }
+        .circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ff6347; /* Red color */
+        }
+        .square {
+            width: 30px;
+            height: 30px;
+            background-color: #ffd700; /* Yellow color */
+        }
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 30px solid #4169e1; /* Blue color */
         }
         .container {
+            position: relative;
             max-width: 800px;
             margin: 50px auto;
             padding: 20px;
-            background-color: #fff;
+            background-color: #222;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            text-align: center; /* Center align content */
+            z-index: 1; /* Ensure content is above shapes */
         }
-        h1, h2 {
-            text-align: center;
+        h1 {
+            display: inline; /* Make title inline */
+            color: #00ffea;
+            margin-right: 20px; /* Add some spacing between title and SVG */
         }
         p {
             text-align: justify;
@@ -45,15 +82,79 @@
     </style>
 </head>
 <body>
+    <!-- Background layer for bouncing shapes -->
+    <div class="background">
+        <!-- JavaScript will populate this with bouncing shapes -->
+    </div>
+
     <div class="container">
+        <!-- SVG logo -->
         <h1>Welcome to Physics Simulator</h1>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+            <circle cx="30" cy="50" r="20" fill="#ff6347"/>
+            <rect x="40" y="30" width="25" height="25" fill="#ffd700"/>
+            <polygon points="70,70 85,30 100,70" fill="#4169e1"/>
+        </svg>
+
         <p>Explore the wonders of physics through interactive simulations. Our simulator provides a hands-on experience to understand various phenomena and concepts in physics.</p>
         <div class="simulator-buttons">
             <a href="./DVD.html">DVD</a>
             <a href="./ballRing.html">Ball Ring</a>
-            <a href="waves.html">Wave Propagation</a>
             <!-- Add more buttons for other simulations -->
         </div>
     </div>
+
+    <!-- JavaScript to create bouncing shapes -->
+    <script>
+        // Function to generate a random number between min and max (inclusive)
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        // Function to create a shape and animate it
+        function createShape() {
+            const shapeTypes = ['circle', 'square', 'triangle'];
+            const shapeType = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+            const shape = document.createElement('div');
+            shape.classList.add('shape', shapeType);
+            shape.style.left = getRandomNumber(0, window.innerWidth) + 'px';
+            shape.style.top = getRandomNumber(0, window.innerHeight) + 'px';
+            document.body.querySelector('.background').appendChild(shape);
+
+            animateShape(shape);
+        }
+
+        // Function to animate the shape
+        function animateShape(shape) {
+            let dx = getRandomNumber(-5, 5);
+            let dy = getRandomNumber(-5, 5);
+            let x = parseInt(shape.style.left);
+            let y = parseInt(shape.style.top);
+
+            function moveShape() {
+                x += dx;
+                y += dy;
+
+                // Bounce off the screen edges
+                if (x < 0 || x > window.innerWidth - shape.offsetWidth) {
+                    dx = getRandomNumber(-5, 5);
+                }
+                if (y < 0 || y > window.innerHeight - shape.offsetHeight) {
+                    dy = getRandomNumber(-5, 5);
+                }
+
+                shape.style.left = x + 'px';
+                shape.style.top = y + 'px';
+                requestAnimationFrame(moveShape);
+            }
+
+            moveShape();
+        }
+
+        // Create multiple shapes
+        for (let i = 0; i < 20; i++) {
+            createShape();
+        }
+    </script>
 </body>
 </html>
