@@ -178,3 +178,23 @@ label {
     cursor: pointer;
 
 }
+
+#ballColor  {
+    position: absolute;
+    top: 80px;
+    left: 10px; /* Ensure it appears above other elements */
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+
+}
+
+#lineColor {
+    position: absolute;
+    top: 120px;
+    left: 8px; /* Ensure it appears above other elements */
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+
+}
