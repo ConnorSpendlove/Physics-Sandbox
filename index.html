@@ -36,13 +36,7 @@
             height: 30px;
             background-color: #ffd700; /* Yellow color */
         }
-        .triangle {
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 30px solid #4169e1; /* Blue color */
-        }
+
         .container {
             position: relative;
             max-width: 800px;
@@ -111,23 +105,68 @@
             return Math.floor(Math.random() * (max - min + 1) + min);
         }
 
+        // Array of pleasing colors
+        const pleasingColors = [
+    '#FFD700', // Gold
+    '#FFA500', // Orange
+    '#FF69B4', // Hot Pink
+    '#ADFF2F', // Green Yellow
+    '#8A2BE2', // Blue Violet
+    '#00FF7F', // Spring Green
+    '#FF1493', // Deep Pink
+    '#00BFFF', // Deep Sky Blue
+    '#00CED1', // Dark Turquoise
+    '#FF4500'  // Orange Red
+];
+
         // Function to create a shape and animate it
         function createShape() {
-            const shapeTypes = ['circle', 'square', 'triangle'];
-            const shapeType = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+            const shapeTypes = ['circle', 'square',];
+            const shapeType = shapeTypes[getRandomNumber(0, shapeTypes.length - 1)]; // Randomly select a shape type
+            const color = pleasingColors[getRandomNumber(0, pleasingColors.length - 1)]; // Randomly select a pleasing color
+            
             const shape = document.createElement('div');
             shape.classList.add('shape', shapeType);
-            shape.style.left = getRandomNumber(0, window.innerWidth) + 'px';
-            shape.style.top = getRandomNumber(0, window.innerHeight) + 'px';
-            document.body.querySelector('.background').appendChild(shape);
+            shape.style.left = getRandomNumber(0, window.innerWidth - 30) + 'px'; // Adjusted to consider shape size
+            shape.style.top = getRandomNumber(0, window.innerHeight - 30) + 'px'; // Adjusted to consider shape size
+            shape.style.backgroundColor = color;
 
-            animateShape(shape);
+            // Check if the new shape intersects with any existing shapes of the same type
+            const existingShapes = document.querySelectorAll('.' + shapeType);
+            let intersects = false;
+            existingShapes.forEach(existingShape => {
+                if (intersect(existingShape, shape)) {
+                    intersects = true;
+                    return;
+                }
+            });
+
+            // If the new shape doesn't intersect, append it to the background
+            if (!intersects) {
+                document.body.querySelector('.background').appendChild(shape);
+                animateShape(shape);
+            } else {
+                // If it intersects, create another shape
+                createShape();
+            }
+        }
+
+        // Function to check if two shapes intersect
+        function intersect(shape1, shape2) {
+            const rect1 = shape1.getBoundingClientRect();
+            const rect2 = shape2.getBoundingClientRect();
+            return !(
+                rect1.right < rect2.left ||
+                rect1.left > rect2.right ||
+                rect1.bottom < rect2.top ||
+                rect1.top > rect2.bottom
+            );
         }
 
         // Function to animate the shape
         function animateShape(shape) {
-            let dx = getRandomNumber(-5, 5);
-            let dy = getRandomNumber(-5, 5);
+            let dx = getRandomNumber(-3, 3); // Random speed along x-axis
+            let dy = getRandomNumber(-3, 3); // Random speed along y-axis
             let x = parseInt(shape.style.left);
             let y = parseInt(shape.style.top);
 
@@ -136,11 +175,11 @@
                 y += dy;
 
                 // Bounce off the screen edges
-                if (x < 0 || x > window.innerWidth - shape.offsetWidth) {
-                    dx = getRandomNumber(-5, 5);
+                if (x < 0 || x > window.innerWidth - 30) {
+                    dx = -dx; // Reverse direction
                 }
-                if (y < 0 || y > window.innerHeight - shape.offsetHeight) {
-                    dy = getRandomNumber(-5, 5);
+                if (y < 0 || y > window.innerHeight - 30) {
+                    dy = -dy; // Reverse direction
                 }
 
                 shape.style.left = x + 'px';
@@ -152,7 +191,7 @@
         }
 
         // Create multiple shapes
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 40; i++) {
             createShape();
         }
     </script>
