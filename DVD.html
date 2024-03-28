@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Sandbox</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="./assets/DVD/css/styles.css">
+</head>
+<body>
+    <div id="container">
+        <div class="back-button">
+            <a href="index.html">Back to Home</a>
+        </div>
+        <div id="shape-selector" class = "">
+            <label for="shape">Select a shape:</label>
+            <select id="shape" >
+                <option value="circle">Circle</option>
+                <option value="square">Square</option>
+                <option value="triangle">Triangle</option>
+            </select>
+        </div>
+        <div id="color-selector">
+            <label for="color" id = "color-text">Select a color:</label>
+            <input type="color" id="shape-color" value="#ffffff"> 
+        </div>
+        <div id="box-size">
+            <label for="width" id = "width-text">Width:</label>
+            <input type="number" id="width" min="100" value="300" max="1000">
+            <label for="height" id = "height-text">Height:</label>
+            <input type="number" id="height" min="100" value="200" max="1000">
+            <button id="apply-size">Apply Size</button>
+            <button id="restore-defaults">Restore Defaults</button>
+        </div>
+        <div id="speed-control">
+            <label for="speed" id = "select-speed">Select speed:</label>
+            <input type="range" id="speed" min="0" max="100" value="5">
+            <span id="speed-display">5</span>
+        </div>
+        <div id="shape-size-container">
+            <label for="shape-size" id="shape-size-label">Shape Size:</label>
+            <input type="range" min="1" max="175" value="50" class="slider" id="shape-size">
+            <span id="shape-size-display">50</span>
+          </div>
+        <div id="box" class="">
+            <div id="shape-container"></div>
+        </div>
+        <div id="buttons">
+            <button id="start">Start Animation</button> <!-- New button for starting the animation -->
+            <button id="control-button">Pause</button>
+            <button id="reset">Reset</button>
+            <label for="audio-slider" id="audio-slider-label">Adjust Volume</label>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25">
+            <span id="volumeDisplay">0.25</span>
+            <!-- HTML for the mute button using Font Awesome -->
+            <div id="muteButton">
+                <i id="muteIcon" class="fas fa-volume-up"></i>
+            </div>
+        </div>
+    </div>
+    
+
+    <script src="./assets/DVD/js/script.js" type = "module"></script>
+</body>
+</html>
+

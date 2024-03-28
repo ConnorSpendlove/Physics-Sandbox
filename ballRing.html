@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ball Bouncing Inside a Ring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="./assets/ballRing/css/style.css">
+</head>
+<body>
+    <div id="container">
+        <button class="hide-controls-button" id="hideControlsButton">Hide Controls</button>
+        <button id="startButton">Start Animation</button>
+        <div class="back-button" id = "back-button">
+            <a href="index.html">Back to Home</a>
+        </div>
+        <div class = "" id = "hide-button">
+            <label for="speedUp">Increase speed on bounce
+                <input type="checkbox" id="speedUp">
+            </label>
+            <label for="sizeUp">Increase size on bounce
+                <input type="checkbox" id="sizeUp">
+            </label>
+            <button id="reset">Reset</button>
+            <label for="audio-slider" id="audio-slider-label">Adjust Volume</label>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25">
+            <span id="volumeDisplay">0.25</span>
+            <!-- HTML for the mute button using Font Awesome -->
+            <div id="muteButton">
+                <i id="muteIcon" class="fas fa-volume-up"></i>
+            </div>
+        </div>
+        <canvas class="ring" id="canvas" width="600" height="400"></canvas>
+        <script src="./assets/ballRing/js/script.js" type="module"></script>
+    </div>
+</body>
+</html>

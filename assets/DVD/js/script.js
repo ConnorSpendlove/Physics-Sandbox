@@ -2,7 +2,6 @@ import { playRandomNote } from './audio.js';
 document.addEventListener("DOMContentLoaded", function() {
     const shapeContainer = document.getElementById('shape-container');
     const box = document.getElementById('box');
-    const containerShapeSelector = document.getElementById('container-shape');
     const widthInput = document.getElementById('width');
     const heightInput = document.getElementById('height');
     const applySizeButton = document.getElementById('apply-size');

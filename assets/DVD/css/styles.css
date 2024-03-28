@@ -167,3 +167,22 @@ button:hover {
     transition: ease-in-out 0.2s;
 }
 
+#addShapeBtn {
+    margin-left: 10px;
+
+}
+
+.back-button {
+    text-align: left;
+    margin-bottom: 20px;
+}
+.back-button a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.back-button a:hover {
+    color: aqua;
+    transition: ease-in-out 0.2s;
+}
+
