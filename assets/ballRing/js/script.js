@@ -11,6 +11,16 @@ const lineColorInput = document.getElementById('line-color');
 const rainbowBallCheckbox = document.getElementById('rainbowBall');
 const rainbowLinesCheckbox = document.getElementById('rainbowLines');
 
+// Get reference to the ball size slider
+const ballSizeSlider = document.getElementById('ball-size-slider');
+
+// Add event listener to handle changes in the slider value
+ballSizeSlider.addEventListener('input', function() {
+    // Update ball radius based on slider value
+    ballRadius = parseInt(this.value);
+});
+
+
 resetButton.addEventListener('click', function() {
     location.reload(); // Reload the page
 });
