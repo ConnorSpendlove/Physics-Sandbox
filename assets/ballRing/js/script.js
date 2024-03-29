@@ -15,14 +15,13 @@ const rainbowLinesCheckbox = document.getElementById('rainbowLines');
 const ballSizeSlider = document.getElementById('ball-size-slider');
 
 // Update shape size display
-const shapeSizeDisplay = document.getElementById('shape-size-display').addEventListener('input', function() {
-    shapeSizeDisplay.textContent = this.value;
-});
+const shapeSizeDisplay = document.getElementById('shape-size-display')
 
 // Add event listener to handle changes in the slider value
 ballSizeSlider.addEventListener('input', function() {
     // Update ball radius based on slider value
     ballRadius = parseInt(this.value);
+    shapeSizeDisplay.textContent = this.value;
 });
 
 
