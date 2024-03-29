@@ -15,12 +15,7 @@ const rainbowLinesCheckbox = document.getElementById('rainbowLines');
 const ballSizeSlider = document.getElementById('ball-size-slider');
 
 // Update shape size display
-// Get the shape size display element
-const shapeSizeDisplay = document.getElementById('shape-size-display');
-
-// Add event listener to the shape size slider
-document.getElementById('ball-size-slider').addEventListener('input', function() {
-    // Update the text content of the shape size display with the current value of the slider
+const shapeSizeDisplay = document.getElementById('shape-size-display').addEventListener('input', function() {
     shapeSizeDisplay.textContent = this.value;
 });
 
@@ -104,21 +99,30 @@ function drawBall() {
     ctx.closePath();
 }
 let hueLines = 0; // Initial hue value for lines
+
+const toggleLinesCheckbox = document.getElementById('toggleLines')
+
 function drawLines() {
-    if (rainbowLinesChecked) {
-        hueLines = (hueLines + 1) % 360; // Increment hue value for lines
-        const color = `hsl(${hueLines}, 100%, 50%)`; // Use HSL color model with varying hue
-        ctx.strokeStyle = color;
-    } else {
-        ctx.strokeStyle = lineColorInput.value;
+    // Check if the toggleLinesCheckbox is not checked
+    if (!toggleLinesCheckbox.checked) {
+        // If rainbowLinesChecked is true, apply rainbow effect
+        if (rainbowLinesChecked) {
+            hueLines = (hueLines + 1) % 360; // Increment hue value for lines
+            const color = `hsl(${hueLines}, 100%, 50%)`; // Use HSL color model with varying hue
+            ctx.strokeStyle = color;
+        } else {
+            // Use the color selected by the user
+            ctx.strokeStyle = lineColorInput.value;
+        }
+        
+        // Draw lines
+        ctx.beginPath();
+        hitPoints.forEach(point => {
+            ctx.moveTo(ball.x, ball.y);
+            ctx.lineTo(point.x, point.y);
+        });
+        ctx.stroke();
     }
-    
-    ctx.beginPath();
-    hitPoints.forEach(point => {
-        ctx.moveTo(ball.x, ball.y);
-        ctx.lineTo(point.x, point.y);
-    });
-    ctx.stroke();
 }
 
 function startRainbowEffect() {
