@@ -195,3 +195,37 @@ rainbowLinesCheckbox.addEventListener('change', function() {
         stopRainbowEffect();
     }
 });
+
+// Function to update the color input and save the selected color to local storage
+function updateColorInput(inputId, color) {
+    document.getElementById(inputId).value = color;
+    localStorage.setItem(inputId, color);
+}
+
+// Event listener for ball color input
+ballColorInput.addEventListener('input', function() {
+    updateColorInput('ball-color', this.value);
+});
+
+// Event listener for line color input
+lineColorInput.addEventListener('input', function() {
+    updateColorInput('line-color', this.value);
+});
+
+// Function to retrieve the last selected color from local storage
+function getStoredColor(inputId) {
+    return localStorage.getItem(inputId);
+}
+
+// Set initial color for ball color input from local storage
+const storedBallColor = getStoredColor('ball-color');
+if (storedBallColor) {
+    ballColorInput.value = storedBallColor;
+}
+
+// Set initial color for line color input from local storage
+const storedLineColor = getStoredColor('line-color');
+if (storedLineColor) {
+    lineColorInput.value = storedLineColor;
+}
+
