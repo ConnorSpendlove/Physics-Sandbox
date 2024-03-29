@@ -198,3 +198,18 @@ label {
     cursor: pointer;
 
 }
+
+#reset-container{
+    display: flex;
+    justify-content: center;
+}
+
+#audio-container{
+    display: flex;
+    justify-content: center;
+}
+
+#ball-size-container{
+    display: flex;
+    justify-content:center;
+}

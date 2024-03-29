@@ -14,6 +14,16 @@ const rainbowLinesCheckbox = document.getElementById('rainbowLines');
 // Get reference to the ball size slider
 const ballSizeSlider = document.getElementById('ball-size-slider');
 
+// Update shape size display
+// Get the shape size display element
+const shapeSizeDisplay = document.getElementById('shape-size-display');
+
+// Add event listener to the shape size slider
+document.getElementById('ball-size-slider').addEventListener('input', function() {
+    // Update the text content of the shape size display with the current value of the slider
+    shapeSizeDisplay.textContent = this.value;
+});
+
 // Add event listener to handle changes in the slider value
 ballSizeSlider.addEventListener('input', function() {
     // Update ball radius based on slider value

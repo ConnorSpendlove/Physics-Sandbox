@@ -35,18 +35,25 @@
                 <label for="sizeUp">Increase size on bounce
                     <input type="checkbox" id="sizeUp">
                 </label>
-                <label for="ball-size-slider">Ball Size:
-                    <input type="range" min="10" max="50" value="20" id="ball-size-slider">
-                </label>
             </div>
             <div>
-                <button id="reset">Reset</button>
-                <label for="audio-slider" id="audio-slider-label">Adjust Volume</label>
-                <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25">
-                <span id="volumeDisplay">0.25</span>
-                <!-- HTML for the mute button using Font Awesome -->
-                <div id="muteButton">
-                    <i id="muteIcon" class="fas fa-volume-up"></i>
+                <div id ="reset-container">
+                    <button id="reset">Reset</button>
+                </div>
+                <div id = "ball-size-container">
+                    <label for="ball-size-slider">Ball Size:
+                        <input type="range" min="1" max="100" value="20" id="ball-size-slider">
+                        <span id="shape-size-display">20</span>
+                    </label>
+                </div>
+                <div id = "audio-container">
+                    <label for="audio-slider" id="audio-slider-label">Adjust Volume</label>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25">
+                    <span id="volumeDisplay">0.25</span>
+                    <!-- HTML for the mute button using Font Awesome -->
+                    <div id="muteButton">
+                        <i id="muteIcon" class="fas fa-volume-up"></i>
+                    </div>
                 </div>
             </div>
         </div>
