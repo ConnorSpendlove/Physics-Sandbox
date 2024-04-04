@@ -109,7 +109,7 @@ label {
 }
 
 #select-speed, #speed-display, #height-text, #width-text, #width, #height, #color-text, #color,
-#select-container-text, #shape-size-display, #audio-slider-label, #volumeDisplay, #shape-size-label {
+#select-container-text, #shape-size-display, #audio-slider-label, #volumeDisplay, #shape-size-label #ball-counter{
     color: var(--white-color);
 }
 
@@ -179,9 +179,20 @@ label {
 
 }
 
+#addBallButton {
+    position: absolute;
+    top: 70px;
+    left: 10px; /* Ensure it appears above other elements */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+
+}
+
 #ballColor  {
     position: absolute;
-    top: 80px;
+    top: 120px;
     left: 10px; /* Ensure it appears above other elements */
     border: none;
     padding: 5px 10px;
@@ -191,7 +202,7 @@ label {
 
 #lineColor {
     position: absolute;
-    top: 120px;
+    top: 160px;
     left: 8px; /* Ensure it appears above other elements */
     border: none;
     padding: 5px 10px;

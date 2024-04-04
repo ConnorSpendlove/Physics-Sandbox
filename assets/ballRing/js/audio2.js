@@ -1,80 +1,58 @@
 // Define the AudioContext and gainNode variables globally
-let audioContext = null;
+let audioCtx = null;
 let gainNode = null;
 let isMuted = false; // Flag to track mute state
+let prevVolumeSliderValue = 0.1
 
 // Function to initialize the audio context and gain node
 function initAudio() {
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    gainNode = audioContext.createGain();
-    gainNode.connect(audioContext.destination);
-}
-
-// Define a variable to store the previous volume slider value
-let prevVolumeSliderValue = 0.5; // Default value
-
-// Function to mute/unmute the audio
-function toggleMute() {
-    if (gainNode) {
-        // Toggle between mute (0) and unmute (1)
-        gainNode.gain.value = gainNode.gain.value === 0 ? 1 : 0;
-
-        // Toggle the mute icon
-        const muteIcon = document.getElementById('muteIcon');
-        muteIcon.classList.toggle('fa-volume-mute');
-        muteIcon.classList.toggle('fa-volume-up');
-
-        // Get the volume slider element
-        const volumeSlider = document.getElementById('volumeSlider');
-
-        // Disable/enable the volume slider based on the mute state
-        volumeSlider.disabled = gainNode.gain.value === 0;
-
-        // If muting, store the current volume slider value
-        if (gainNode.gain.value === 0) {
-            prevVolumeSliderValue = volumeSlider.value;
-            volumeSlider.value = 0; // Set volume slider value to 0 when muted
-        } else {
-            // If unmuting, restore the previous volume slider value
-            volumeSlider.value = prevVolumeSliderValue;
-        }
-
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        gainNode = audioCtx.createGain(); // Create a gain node for volume control
+        gainNode.connect(audioCtx.destination);
+        // Load volume from local storage
+        loadVolumeFromLocalStorage();
         // Update volume display
         updateVolumeDisplay();
     }
 }
-
-
-// Function to play a random note
-function playRandomNote() {
-    // Check if audio context is initialized
-    if (!audioContext) {
-        console.error('AudioContext not initialized. Initializing now...');
-        initAudio(); // Initialize audio context if not already initialized
+function updateVolume() {
+    if (!audioCtx) {
+        // Initialize the AudioContext if it's not already initialized
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
-
-    const oscillator = audioContext.createOscillator();
-    oscillator.type = 'sine'; // Change oscillator type here if needed
-
-    // Define an array of frequencies corresponding to notes in a musical scale (e.g., C4 to C5)
-    const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
-
-    // Randomly select a frequency from the array
-    const randomFrequency = frequencies[Math.floor(Math.random() * frequencies.length)];
-
-    // Use the selected frequency to generate a note
-    oscillator.frequency.setValueAtTime(randomFrequency, audioContext.currentTime);
-
-    // Set gain value based on volume slider
-    const volume = parseFloat(document.getElementById('volumeSlider').value);
-    gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-
-    oscillator.connect(gainNode);
-    oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.05); // Adjust note duration as needed
+    
+    if (!gainNode) {
+        // Create a gain node if it's not already created
+        gainNode = audioCtx.createGain();
+    }
+    
+    // Update the gain value
+    const volumeSlider = document.getElementById('volumeSlider');
+    const volume = parseFloat(volumeSlider.value);
+    gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+    updateVolumeDisplay(); // Update volume display
+    saveVolumeToLocalStorage(); // Save volume to local storage
 }
+
+// Add event listener to update volume when slider value changes
+document.getElementById('volumeSlider').addEventListener('input', updateVolume);
+
+// Function to toggle mute/unmute when the mute button is clicked
+function toggleMute() {
+    isMuted = !isMuted;
+    const volumeSlider = document.getElementById('volumeSlider');
+    if (isMuted) {
+        prevVolumeSliderValue = volumeSlider.value;
+        volumeSlider.value = 0; // Set volume slider value to 0 when muted
+    } else {
+        volumeSlider.value = prevVolumeSliderValue; // Restore previous volume slider value
+    }
+    updateVolume(); // Update volume
+}
+
+// Add event listener to toggle mute/unmute when the mute button is clicked
+document.getElementById('muteButton').addEventListener('click', toggleMute);
 
 // Function to update volume display
 function updateVolumeDisplay() {
@@ -99,28 +77,36 @@ function loadVolumeFromLocalStorage() {
     }
 }
 
-// Add event listener to update volume when slider value changes
-document.getElementById('volumeSlider').addEventListener('input', function() {
-    const volumeSlider = document.getElementById('volumeSlider');
-    const volume = parseFloat(volumeSlider.value);
-
-    // If the mute button is not pressed, allow setting the volume
-    if (!isMuted) {
-        // Ensure volume is not set to 0
-        if (volume === 0) {
-            // If volume is 0, set it to a small non-zero value
-            volumeSlider.value = 0.01;
-        }
-        gainNode.gain.setValueAtTime(volume, audioContext.currentTime);
-        updateVolumeDisplay(); // Update volume display
-        saveVolumeToLocalStorage(); // Save volume to local storage
+// Function to play a random note
+function playRandomNote() {
+    // Check if audio context is initialized
+    if (!audioCtx) {
+        console.error('AudioContext not initialized. Initializing now...');
+        initAudio(); // Initialize audio context if not already initialized
     }
-});
 
-loadVolumeFromLocalStorage();
+    const oscillator = audioCtx.createOscillator();
 
-// Add event listener to toggle mute/unmute when the mute button is clicked
-const muteButton = document.getElementById('muteButton');
-muteButton.addEventListener('click', toggleMute);
+    // Choose a random waveform type;
+    oscillator.type = 'sine';
+
+    // Define an array of frequencies corresponding to notes in a wider musical scale
+    const frequencies = [130.81, 146.83, 164.81, 174.61, 196.00, 220.00, 246.94, 261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 523.25];
+
+    // Randomly select a frequency from the array
+    const randomFrequency = frequencies[Math.floor(Math.random() * frequencies.length)];
+
+    // Use the selected frequency to generate a note
+    oscillator.frequency.setValueAtTime(randomFrequency, audioCtx.currentTime);
+
+    // Apply envelope to control volume over time
+    const attackTime = 0.1; // Duration for volume ramp-up (in seconds)
+    const releaseTime = 0.; // Duration for volume ramp-down (in seconds)
+
+    oscillator.connect(gainNode);
+    
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + attackTime + releaseTime); // Adjust note duration as needed
+}
 
 export { playRandomNote, initAudio };
