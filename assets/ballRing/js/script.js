@@ -20,9 +20,12 @@ const ballSizeSlider = document.getElementById('ball-size-slider');
 const shapeSizeDisplay = document.getElementById('shape-size-display')
 
 // Add event listener to handle changes in the slider value
+// Add event listener to handle changes in the slider value
 ballSizeSlider.addEventListener('input', function() {
     // Update ball radius based on slider value
-    ballRadius = parseInt(this.value);
+    balls.forEach(ball => {
+        ball.radius = parseInt(this.value);
+    });
     shapeSizeDisplay.textContent = this.value;
 });
 
@@ -163,7 +166,7 @@ function update() {
             ball.x = canvas.width / 2 + normalX * (ringRadius - ball.radius);
             ball.y = canvas.height / 2 + normalY * (ringRadius - ball.radius);
 
-            // Store hit point for this ball
+            // Store hit point
             ball.hitPoints.push({ x: ball.x + normalX * ball.radius, y: ball.y + normalY * ball.radius });
 
             // Increase ball speed
@@ -186,6 +189,41 @@ function update() {
         }
     });
 
+    // Check for collisions between balls
+    for (let i = 0; i < balls.length; i++) {
+        for (let j = i + 1; j < balls.length; j++) {
+            const dx = balls[i].x - balls[j].x;
+            const dy = balls[i].y - balls[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < balls[i].radius + balls[j].radius) {
+                // Balls collide, adjust their velocities
+                const angle = Math.atan2(dy, dx);
+                const magnitude1 = Math.sqrt(balls[i].vx * balls[i].vx + balls[i].vy * balls[i].vy);
+                const magnitude2 = Math.sqrt(balls[j].vx * balls[j].vx + balls[j].vy * balls[j].vy);
+                const direction1 = Math.atan2(balls[i].vy, balls[i].vx);
+                const direction2 = Math.atan2(balls[j].vy, balls[j].vx);
+
+                const vx1 = magnitude1 * Math.cos(direction1 - angle);
+                const vy1 = magnitude1 * Math.sin(direction1 - angle);
+                const vx2 = magnitude2 * Math.cos(direction2 - angle);
+                const vy2 = magnitude2 * Math.sin(direction2 - angle);
+
+                const finalVelocityX1 = ((balls[i].radius - balls[j].radius) * vx1 + (balls[j].radius + balls[j].radius) * vx2) / (balls[i].radius + balls[j].radius);
+                const finalVelocityX2 = ((balls[i].radius + balls[i].radius) * vx1 + (balls[j].radius - balls[i].radius) * vx2) / (balls[i].radius + balls[j].radius);
+
+                const finalVelocityY1 = vy1;
+                const finalVelocityY2 = vy2;
+
+                // Update velocities
+                balls[i].vx = Math.cos(angle) * finalVelocityX1 + Math.cos(angle + Math.PI / 2) * finalVelocityY1;
+                balls[i].vy = Math.sin(angle) * finalVelocityX1 + Math.sin(angle + Math.PI / 2) * finalVelocityY1;
+                balls[j].vx = Math.cos(angle) * finalVelocityX2 + Math.cos(angle + Math.PI / 2) * finalVelocityY2;
+                balls[j].vy = Math.sin(angle) * finalVelocityX2 + Math.sin(angle + Math.PI / 2) * finalVelocityY2;
+            }
+        }
+    }
+
     // Draw everything
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawRing();
@@ -196,6 +234,7 @@ function update() {
         requestAnimationFrame(update);
     }
 }
+
 
 let ballCounter = 0;
 // Event listener to trigger adding a new ball
