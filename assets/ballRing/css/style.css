@@ -109,7 +109,8 @@ label {
 }
 
 #select-speed, #speed-display, #height-text, #width-text, #width, #height, #color-text, #color,
-#select-container-text, #shape-size-display, #audio-slider-label, #volumeDisplay, #shape-size-label #ball-counter{
+#select-container-text, #shape-size-display, #audio-slider-label, #volumeDisplay, #shape-size-label #ball-counter
+#doubleBallsCheckboxText{
     color: var(--white-color);
 }
 
@@ -187,6 +188,18 @@ label {
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+
+}
+
+#addBallsOnBounce {
+    position: absolute;
+    top: 95px;
+    left: 10px; /* Ensure it appears above other elements */
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+
 
 }
 

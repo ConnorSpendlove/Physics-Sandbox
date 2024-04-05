@@ -13,6 +13,18 @@ const rainbowLinesCheckbox = document.getElementById('rainbowLines');
 const toggleLinesCheckbox = document.getElementById('toggleLines');
 const ballCounterDisplay = document.getElementById('ball-counter'); // Reference to the ball counter display
 
+// Step 1: Create a variable to track the number of bounces and the status of the double balls option
+let bounceCount = 0;
+let doubleBallsEnabled = false; // Initially disabled
+
+// Step 2: Define a threshold value for the number of bounces
+const bounceThreshold = 25; // Adjust as needed
+
+// Step 3: Add an event listener to toggle the double balls option
+document.getElementById('doubleBallsCheckbox').addEventListener('change', function() {
+    doubleBallsEnabled = this.checked;
+});
+
 // Get reference to the ball size slider
 const ballSizeSlider = document.getElementById('ball-size-slider');
 
@@ -124,9 +136,6 @@ function drawLines() {
     }
 }
 
-
-
-
 function startRainbowEffect() {
     rainbowBallInterval = setInterval(() => {
         balls.forEach(ball => drawBall(ball));
@@ -182,11 +191,37 @@ function update() {
 
             // Play random note
             playRandomNote();
+            bounceCount++;
         } else {
             // If the next position is safe, update ball position
             ball.x = nextX;
             ball.y = nextY;
         }
+
+        if (doubleBallsEnabled && bounceCount >= bounceThreshold) {
+            // Step 5: Double the number of balls
+            const newBall = {
+                x: Math.random() * canvas.width, // Random x position within canvas width
+                y: Math.random() * canvas.height, // Random y position within canvas height
+                vx: Math.random() * 10 - 5, // Initial x velocity
+                vy: Math.random() * 10 - 5, // Initial y velocity
+                radius: 20, // Initial ball radius
+                color: ballColorInput.value, // Ball color
+                hitPoints: [] // Array to store hit points
+            };
+        
+            // Add the new ball to the balls array
+            balls.push(newBall);
+            // Increment the ball counter
+            ballCounter++;
+        
+            // Update the ball counter display
+            ballCounterDisplay.textContent = ballCounter;
+            // Reset bounce counter
+            bounceCount = 0;
+        }
+        
+    
     });
 
     // Check for collisions between balls
@@ -238,6 +273,7 @@ function update() {
 
 let ballCounter = 0;
 // Event listener to trigger adding a new ball
+
 document.getElementById('addBallButton').addEventListener('click', function() {
     // Create a new ball object with initial properties
     const newBall = {
