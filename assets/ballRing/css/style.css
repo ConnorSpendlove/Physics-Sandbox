@@ -21,7 +21,7 @@ body, html {
 
 .back-button a {
     text-decoration: none;
-    color: #007bff;
+    color: #ffffff;
 }
 
 .back-button a:hover {
@@ -161,8 +161,9 @@ label {
     cursor: pointer;
 }
 
-.hide-controls-button:hover {
+#reset:hover, #back-button:hover {
     background-color: #0056b3;
+    color: aqua;
 }
 
 .hide {
@@ -179,6 +180,31 @@ label {
     cursor: pointer;
 
 }
+
+#reset {
+    position: absolute;
+    top: 10px;
+    left: 130px; /* Ensure it appears above other elements */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+
+}
+
+#back-button {
+    position: absolute;
+    top: 10px;
+    left: 10px; /* Ensure it appears above other elements */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+
+}
+
 
 #addBallButton {
     position: absolute;
@@ -199,13 +225,15 @@ label {
     border: none;
     padding: 5px 10px;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
 
 
 }
 
 #ballColor  {
     position: absolute;
-    top: 120px;
+    top: 250px;
     left: 10px; /* Ensure it appears above other elements */
     border: none;
     padding: 5px 10px;
@@ -215,7 +243,7 @@ label {
 
 #lineColor {
     position: absolute;
-    top: 160px;
+    top: 280px;
     left: 8px; /* Ensure it appears above other elements */
     border: none;
     padding: 5px 10px;

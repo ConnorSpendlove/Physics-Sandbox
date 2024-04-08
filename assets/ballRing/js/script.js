@@ -32,7 +32,6 @@ const ballSizeSlider = document.getElementById('ball-size-slider');
 const shapeSizeDisplay = document.getElementById('shape-size-display')
 
 // Add event listener to handle changes in the slider value
-// Add event listener to handle changes in the slider value
 ballSizeSlider.addEventListener('input', function() {
     // Update ball radius based on slider value
     balls.forEach(ball => {
@@ -46,18 +45,14 @@ resetButton.addEventListener('click', function() {
     location.reload(); // Reload the page
 });
 
-hideControlsButton.addEventListener('click', function() {
-    hideButton.classList.toggle('hide');
-    backButton.classList.toggle('hide');
-});
 
 let ringRadius = 150;
 let ballRadius = 20;
 const gravity = 0.2;
 let animationRunning = false; // Flag to control animation state
 
-const speedIncreaseFactor = 0.01; // Speed increase factor per bounce
-const sizeIncreaseAmount = 2; // Radius increase amount per bounce
+const speedIncreaseFactor = 0.025; // Speed increase factor per bounce
+const sizeIncreaseAmount = 0.5; // Radius increase amount per bounce
 
 let balls = []; // Array to store all balls
 let hitPoints = []; // Store hit points
@@ -105,6 +100,13 @@ function drawBall(ball) {
     } else {
         ctx.fillStyle = ball.color;
     }
+
+     // Draw white outline if tracing mode is active
+     if (document.getElementById('tracingModeCheckbox').checked) {
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+    }
     ctx.fill();
     ctx.closePath();
 }
@@ -112,8 +114,8 @@ function drawBall(ball) {
 let hueLines = 0; // Initial hue value for lines
 
 function drawLines() {
-    // Check if the toggleLinesCheckbox is not checked
-    if (!toggleLinesCheckbox.checked) {
+    // Check if the toggleLinesCheckbox is checked
+    if (toggleLinesCheckbox.checked) {
         // If rainbowLinesChecked is true, apply rainbow effect
         if (rainbowLinesChecked) {
             hueLines = (hueLines + 1) % 360; // Increment hue value for lines
@@ -135,6 +137,53 @@ function drawLines() {
         ctx.stroke();
     }
 }
+
+let tracedBallPositions = []; // Array to store positions of traced balls
+
+// Modify the traceBallPath() function to store the current position of each ball
+function traceBallPath() {
+    if (document.getElementById('tracingModeCheckbox').checked) {
+        // Store the current position of the main ball
+        const currentPosition = { x: balls[0].x, y: balls[0].y };
+
+        // Add the current position to the array of traced positions
+        tracedBallPositions.push(currentPosition);
+    }
+}
+
+
+function drawTracedBalls(color, rainbowActive) {
+    const mainBallRadius = balls[0].radius; // Get the radius of the main ball
+    if (document.getElementById('tracingModeCheckbox').checked) {
+        // Track the number of times the function has been called
+        drawTracedBalls.callCount = (drawTracedBalls.callCount || 0) + 1;
+
+        if (drawTracedBalls.callCount > 365) {
+            tracedBallPositions.shift(); // Remove the oldest traced ball
+        }
+
+        tracedBallPositions.forEach((position, index) => {
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(position.x, position.y, mainBallRadius, 0, Math.PI * 2); // Use the radius of the main ball
+            if (rainbowActive) {
+                const color = `hsl(${hue}, 100%, 50%)`; // Use HSL color model with varying hue
+                ctx.fillStyle = color;
+            } else {
+                ctx.fillStyle = color; // Use the color of the main ball for traced balls
+            }
+            ctx.globalAlpha = 1; // Set opacity to 100%
+            ctx.fill();
+            ctx.strokeStyle = 'black'; // Set black stroke color
+            ctx.lineWidth = 0.2; // Set stroke width
+            ctx.stroke(); // Draw the outline
+            ctx.restore();
+        });
+        console.log(".")
+    }
+}
+
+
 
 function startRainbowEffect() {
     rainbowBallInterval = setInterval(() => {
@@ -205,7 +254,7 @@ function update() {
                 y: Math.random() * canvas.height, // Random y position within canvas height
                 vx: Math.random() * 10 - 5, // Initial x velocity
                 vy: Math.random() * 10 - 5, // Initial y velocity
-                radius: 20, // Initial ball radius
+                radius: 10, // Initial ball radius
                 color: ballColorInput.value, // Ball color
                 hitPoints: [] // Array to store hit points
             };
@@ -220,8 +269,6 @@ function update() {
             // Reset bounce counter
             bounceCount = 0;
         }
-        
-    
     });
 
     // Check for collisions between balls
@@ -261,14 +308,25 @@ function update() {
 
     // Draw everything
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     drawRing();
+
     drawLines();
-    balls.forEach(ball => drawBall(ball));
+
+    balls.forEach(ball => {
+        drawTracedBalls(ball.color, rainbowBallChecked); // Draw traced balls first
+        drawBall(balls[0], rainbowBallChecked); // Draw main ball on top
+    });
+
+    
+    traceBallPath();
 
     if (animationRunning) {
         requestAnimationFrame(update);
     }
 }
+
+
 
 
 let ballCounter = 0;
@@ -281,7 +339,7 @@ document.getElementById('addBallButton').addEventListener('click', function() {
         y: canvas.height / 2, // Initial y position
         vx: Math.random() * 10 - 5, // Initial x velocity
         vy: Math.random() * 10 - 5, // Initial y velocity
-        radius: 20, // Initial ball radius
+        radius: 10, // Initial ball radius
         color: ballColorInput.value, // Ball color
         hitPoints: [] // Array to store hit points
     };
@@ -351,3 +409,6 @@ const storedLineColor = getStoredColor('line-color');
 if (storedLineColor) {
     lineColorInput.value = storedLineColor;
 }
+
+
+

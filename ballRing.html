@@ -9,7 +9,6 @@
 </head>
 <body>
     <div id="container">
-        <button class="hide-controls-button" id="hideControlsButton">Hide Controls</button>
         <button id="startButton">Start Animation</button>
          <!-- Input for selecting the color of the lines that appear on bounce -->
         <label for="ball-color" id = ballColor>Ball Color:
@@ -23,10 +22,9 @@
             <label for="rainbowLines" id = "rainbow-lines">Rainbow Lines
                 <input type="checkbox" id="rainbowLines">
             </label>
-            <input type="checkbox" id="toggleLines">
-                <label for="toggleLines">Toggle Lines</label>
             </label>
         <div>
+           
             <button id = "addBallButton">Add Ball
                 <span id="ball-counter">0</span>
             </button>
@@ -35,27 +33,23 @@
             <label for="doubleBallsCheckbox" id = "doubleBallsCheckboxText">Add Balls on Bounce
                 <input type="checkbox" id="doubleBallsCheckbox">
             </label>
-        </div>
-        <div class="back-button" id = "back-button">
-            <a href="index.html">Back to Home</a>
-        </div>
-        <div class="" id="hide-button">
+            <label for="tracingModeCheckbox">Enable Tracing Mode
+                <input type="checkbox" id="tracingModeCheckbox">
+            </label>
+            <label for="toggleLines">Toggle Lines
+                <input type="checkbox" id="toggleLines">
+            </label>
+            <label for="speedUp">Increase speed on bounce
+                <input type="checkbox" id="speedUp">
+            </label>
+            <label for="sizeUp">Increase size on bounce
+                <input type="checkbox" id="sizeUp">
+            </label>
             <div>
-                <label for="speedUp">Increase speed on bounce
-                    <input type="checkbox" id="speedUp">
-                </label>
-                <label for="sizeUp">Increase size on bounce
-                    <input type="checkbox" id="sizeUp">
-                </label>
-            </div>
-            <div>
-                <div id ="reset-container">
-                    <button id="reset">Reset</button>
-                </div>
                 <div id = "ball-size-container">
                     <label for="ball-size-slider">Ball Size:
-                        <input type="range" min="1" max="100" value="20" id="ball-size-slider">
-                        <span id="shape-size-display">20</span>
+                        <input type="range" min="1" max="100" value="10" id="ball-size-slider">
+                        <span id="shape-size-display">10</span>
                     </label>
                 </div>
                 <div id = "audio-container">
@@ -68,6 +62,13 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <button id="reset">Reset</button>
+        <button class = "back-button" id="back-button">
+            <a href="index.html">Back to Home</a>
+        </button>
+        <div class="" id="hide-button">
+          
         </div>
         
         <canvas class="ring" id="canvas" width="600" height="400"></canvas>
