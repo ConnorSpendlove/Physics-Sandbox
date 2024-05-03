@@ -18,7 +18,7 @@ let bounceCount = 0;
 let doubleBallsEnabled = false; // Initially disabled
 
 // Step 2: Define a threshold value for the number of bounces
-const bounceThreshold = 25; // Adjust as needed
+const bounceThreshold = 10; // Adjust as needed
 
 // Step 3: Add an event listener to toggle the double balls option
 document.getElementById('doubleBallsCheckbox').addEventListener('change', function() {
@@ -52,7 +52,7 @@ const gravity = 0.2;
 let animationRunning = false; // Flag to control animation state
 
 const speedIncreaseFactor = 0.025; // Speed increase factor per bounce
-const sizeIncreaseAmount = 0.5; // Radius increase amount per bounce
+const sizeIncreaseAmount = 0.4; // Radius increase amount per bounce
 
 let balls = []; // Array to store all balls
 let hitPoints = []; // Store hit points
@@ -158,7 +158,7 @@ function drawTracedBalls(color, rainbowActive) {
         // Track the number of times the function has been called
         drawTracedBalls.callCount = (drawTracedBalls.callCount || 0) + 1;
 
-        if (drawTracedBalls.callCount > 365) {
+        if (drawTracedBalls.callCount > 100) {
             tracedBallPositions.shift(); // Remove the oldest traced ball
         }
 
@@ -199,6 +199,11 @@ function stopRainbowEffect() {
     clearInterval(rainbowBallInterval);
     clearInterval(rainbowLinesInterval);
 }
+
+const bounceCounterDisplay = document.getElementById('bounce-counter'); // Reference to the bounce counter display
+
+// Define a variable to track the number of bounces
+let bounceCounter = 0;
 
 
 function update() {
@@ -241,6 +246,10 @@ function update() {
             // Play random note
             playRandomNote();
             bounceCount++;
+             // Increment bounce counter
+             bounceCounter++;
+             // Update bounce counter display
+             bounceCounterDisplay.textContent = bounceCounter;
         } else {
             // If the next position is safe, update ball position
             ball.x = nextX;
@@ -315,7 +324,7 @@ function update() {
 
     balls.forEach(ball => {
         drawTracedBalls(ball.color, rainbowBallChecked); // Draw traced balls first
-        drawBall(balls[0], rainbowBallChecked); // Draw main ball on top
+        drawBall(ball, rainbowBallChecked); // Draw main ball on top
     });
 
     
@@ -332,26 +341,48 @@ function update() {
 let ballCounter = 0;
 // Event listener to trigger adding a new ball
 
+// Event listener to trigger adding a new ball
 document.getElementById('addBallButton').addEventListener('click', function() {
-    // Create a new ball object with initial properties
-    const newBall = {
-        x: canvas.width / 2, // Initial x position
-        y: canvas.height / 2, // Initial y position
-        vx: Math.random() * 10 - 5, // Initial x velocity
-        vy: Math.random() * 10 - 5, // Initial y velocity
-        radius: 10, // Initial ball radius
-        color: ballColorInput.value, // Ball color
-        hitPoints: [] // Array to store hit points
-    };
+    // Generate random coordinates until a position without overlap is found
+    let newBallX, newBallY;
+    let overlap = true;
 
-    // Add the new ball to the balls array
+    while (overlap) {
+        newBallX = canvas.width / 2 + (Math.random() * 2 - 1) * ringRadius;
+        newBallY = canvas.height / 2 + (Math.random() * 2 - 1) * ringRadius;
+        overlap = balls.some(ball => checkOverlap(newBallX, newBallY, ball));
+    }
+
+    // Create the ball with the calculated coordinates
+    const newBall = {
+        x: newBallX,
+        y: newBallY,
+        vx: Math.random() * 10 - 5,
+        vy: Math.random() * 10 - 5,
+        radius: ballRadius,
+        color: ballColorInput.value,
+        hitPoints: []
+    };
     balls.push(newBall);
-    // Increment the ball counter
     ballCounter++;
 
     // Update the ball counter display
     ballCounterDisplay.textContent = ballCounter;
 });
+
+
+// Function to check if there's overlap between a new ball and an existing ball
+function checkOverlap(x, y, otherBall) {
+    // Calculate the distance between the centers of the new ball and the existing ball
+    const dx = x - otherBall.x;
+    const dy = y - otherBall.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Check if the distance is less than the sum of their radii
+    return distance < ballRadius + otherBall.radius;
+}
+
+
 
 // Start animation when the page loads
 update();
