@@ -1,0 +1,80 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#explosion {
+    position: absolute;
+    display: none;
+    opacity: 1; /* Set initial opacity */
+}
+
+#canvas {
+    border: 2px solid #000;
+}
+
+#gameOverModal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+}
+
+#healthBar {
+    position: absolute;
+    top: 10px;
+    left: 130px;
+}
+
+.heart {
+    width: 30px;
+    height: auto;
+}
+.back-button {
+    position: absolute;
+    top: 10px;
+    left: 15px; /* Ensure it appears above other elements */
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.back-button a {
+text-decoration: none;
+color: #ffffff;
+}
+
+.back-button a:hover {
+color: aqua;
+transition: ease-in-out 0.2s;
+}
+
+#bestScore {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+}
+
+#restartButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
