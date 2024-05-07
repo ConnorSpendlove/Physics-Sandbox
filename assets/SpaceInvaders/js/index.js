@@ -20,17 +20,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const replenishRate = 1000; // Replenish rate in milliseconds (1 bullet every 2 seconds)
     let heartSpawnChance = 0.0007; // 10% chance of spawning a heart
 
-
     const balls = [];
     const projectiles = [];
     const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'];
 
-    // Function to check if the player can shoot
     function canShoot() {
         return bullets > 0;
     }
 
-    // Function to replenish bullets over time
     function replenishBullets() {
         setInterval(() => {
             if (bullets < maxBullets) {
@@ -40,7 +37,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }, replenishRate);
     }
 
-    // Function to update the bullet display
     function updateBulletDisplay() {
         document.getElementById('bulletCount').textContent = bullets;
     }
@@ -56,15 +52,10 @@ document.addEventListener("DOMContentLoaded", function () {
         hearts.push(heart);
     }
 
-    
-    
-
-
     const LifeUPsound = new Audio('./assets/SpaceInvaders/audio/lifeUP.mp3');
     const pewSound = new Audio('./assets/SpaceInvaders/audio/pew.mp3');
     const boomSound = new Audio('./assets/SpaceInvaders/audio/boom.mp3');
     const ouchSound = new Audio('./assets/SpaceInvaders/audio/ouch.mp3');
-
 
     class Ball {
         constructor(x, y, dx, dy, radius, color) {
@@ -75,8 +66,10 @@ document.addEventListener("DOMContentLoaded", function () {
             this.radius = radius;
             this.color = color;
             this.isExploded = false;
+            this.lifetime = 0; // Add lifetime property
+            this.opacity = 1; // Add opacity property
         }
-
+    
         explode() {
             this.isExploded = true;
             const index = balls.indexOf(this);
@@ -96,32 +89,47 @@ document.addEventListener("DOMContentLoaded", function () {
                 explosion.style.display = 'none';
             }, 600); // Adjust the duration as needed
         }
-
+    
         draw() {
+            ctx.globalAlpha = this.opacity; // Set opacity
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
             ctx.fillStyle = this.color;
             ctx.fill();
             ctx.closePath();
+            ctx.globalAlpha = 1; // Reset opacity
         }
-
+    
         update() {
+            this.lifetime += 1; // Increment lifetime
+            if (this.lifetime > 900) { // 15 seconds (900 frames at 60 fps)
+                this.opacity -= 0.01; // Reduce opacity gradually
+                if (this.opacity <= 0) { // Remove ball when opacity becomes zero
+                    const index = balls.indexOf(this);
+                    if (index !== -1) {
+                        balls.splice(index, 1);
+                    }
+                    return; // Exit update loop
+                }
+            }
+    
             if (this.y + this.radius + this.dy > canvas.height) {
                 this.dy = -this.dy * 0.9;
             } else {
                 this.dy += 0.05;
             }
-
+    
             if (this.x + this.radius + this.dx > canvas.width || this.x - this.radius + this.dx < 0) {
                 this.dx = -this.dx;
             }
-
+    
             this.x += this.dx;
             this.y += this.dy;
-
+    
             this.draw();
         }
     }
+    
 
     function drawPerson() {
         ctx.beginPath();
@@ -134,7 +142,6 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.fill();
         ctx.closePath();
     }
-    
 
     function drawProjectiles() {
         projectiles.forEach(projectile => {
@@ -170,16 +177,18 @@ document.addEventListener("DOMContentLoaded", function () {
         drawPerson();
         drawProjectiles();
         drawHealthBar();
-        updateHearts(); // Add this line to update hearts
+        updateHearts();
         if (gameOver) {
             showGameOverModal();
         }
-    
+
         if (lives <= 2 && Math.random() < heartSpawnChance) {
             spawnHeart();
         }
+
     }
-    
+
+
     function updateHearts() {
         hearts.forEach(heart => {
             heart.y += heart.dy; // Update heart's position
@@ -187,14 +196,13 @@ document.addEventListener("DOMContentLoaded", function () {
             checkHeartCollision(heart); // Check collision with player
         });
     }
-    
+
     function drawHeart(heart) {
         const heartImage = new Image();
         heartImage.src = './assets/SpaceInvaders/images/heart.png';
         ctx.drawImage(heartImage, heart.x - heart.radius, heart.y - heart.radius, heart.radius * 2, heart.radius * 2);
     }
-    
-    
+
     function checkHeartCollision(heart) {
         const dx = personX + personWidth / 2 - heart.x;
         const dy = personY + personHeight / 2 - heart.y;
@@ -216,7 +224,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }
-    
 
     function moveLeft() {
         personX -= speed;
@@ -420,4 +427,3 @@ document.addEventListener("DOMContentLoaded", function () {
     animate(); // Initial drawing
     spawnBallsInterval(); // Start spawning balls
 });
-
