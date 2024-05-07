@@ -42,6 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('bulletCount').textContent = bullets;
     }
 
+    const pewSound = new Audio('./assets/SpaceInvaders/audio/pew.mp3');
+    const boomSound = new Audio('./assets/SpaceInvaders/audio/boom.mp3');
+    const ouchSound = new Audio('./assets/SpaceInvaders/audio/ouch.mp3');
+
+
     class Ball {
         constructor(x, y, dx, dy, radius, color) {
             this.x = x;
@@ -59,6 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (index !== -1) {
                 balls.splice(index, 1);
             }
+            boomSound.currentTime = 0;
+            boomSound.play();
             // Show explosion image at the position
             const explosion = document.getElementById('explosion');
             explosion.style.left = (this.x - this.radius) + 'px';
@@ -167,6 +174,8 @@ document.addEventListener("DOMContentLoaded", function () {
             };
             projectiles.push(projectile);
             bullets--; // Reduce the number of bullets
+            pewSound.currentTime = 0;
+            pewSound.play();
             updateBulletDisplay(); // Update the bullet display
         }
     }
@@ -250,6 +259,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function loseLife() {
         lives--;
+        ouchSound.currentTime = 0;
+        ouchSound.play();
         if (lives <= 0) {
             gameOver = true;
         } else {
