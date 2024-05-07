@@ -79,6 +79,14 @@ transition: ease-in-out 0.2s;
     color: #fff;
 }
 
+#bulletCount {
+    position: absolute;
+    top: 70px;
+    right: 10px;
+    font-size: 18px;
+    color: #fff;
+}
+
 #restartButton {
     margin-top: 20px;
     padding: 10px 20px;

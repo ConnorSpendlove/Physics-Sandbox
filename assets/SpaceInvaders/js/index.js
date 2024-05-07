@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
@@ -14,10 +14,33 @@ document.addEventListener("DOMContentLoaded", function() {
     let lives = 3;
     let gameOver = false;
     let playerHit = false;
+    let bullets = 10; // Current number of bullets
+    const maxBullets = 10; // Maximum number of bullets
+    const replenishRate = 2000; // Replenish rate in milliseconds (1 bullet every 2 seconds)
 
     const balls = [];
     const projectiles = [];
     const colors = ['#3498db', '#e74c3c', '#2ecc71', '#f39c12', '#9b59b6'];
+
+    // Function to check if the player can shoot
+    function canShoot() {
+        return bullets > 0;
+    }
+
+    // Function to replenish bullets over time
+    function replenishBullets() {
+        setInterval(() => {
+            if (bullets < maxBullets) {
+                bullets++;
+                updateBulletDisplay();
+            }
+        }, replenishRate);
+    }
+
+    // Function to update the bullet display
+    function updateBulletDisplay() {
+        document.getElementById('bulletCount').textContent = bullets;
+    }
 
     class Ball {
         constructor(x, y, dx, dy, radius, color) {
@@ -94,13 +117,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function drawHealthBar() {
         const healthBar = document.getElementById('healthBar');
-        healthBar.innerHTML = '';
-        for (let i = 0; i < lives; i++) {
-            const heart = document.createElement('img');
-            heart.classList.add('heart');
-            heart.src = 'heart.png';
-            heart.alt = 'Heart';
-            healthBar.appendChild(heart);
+        const hearts = healthBar.querySelectorAll('.heart');
+        for (let i = 0; i < hearts.length; i++) {
+            if (i < lives) {
+                hearts[i].style.display = 'block';
+            } else {
+                hearts[i].style.display = 'none';
+            }
         }
     }
 
@@ -136,12 +159,16 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function shoot() {
-        const projectile = {
-            x: personX + personWidth / 2,
-            y: personY,
-            dy: -5 // Bullet flies upwards
-        };
-        projectiles.push(projectile);
+        if (canShoot()) {
+            const projectile = {
+                x: personX + personWidth / 2,
+                y: personY,
+                dy: -5 // Bullet flies upwards
+            };
+            projectiles.push(projectile);
+            bullets--; // Reduce the number of bullets
+            updateBulletDisplay(); // Update the bullet display
+        }
     }
 
     function keyDownHandler(event) {
@@ -180,13 +207,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Define a variable to store the current score
-let currentScore = 0;
+    let currentScore = 0;
 
-// Update the current score when a ball is exploded
-function updateCurrentScore() {
-    currentScore++;
-    document.getElementById('currentScoreValue').textContent = currentScore;
-}
+    // Update the current score when a ball is exploded
+    function updateCurrentScore() {
+        currentScore++;
+        document.getElementById('currentScoreValue').textContent = currentScore;
+    }
 
     function handleCollisions() {
         for (let i = 0; i < projectiles.length; i++) {
@@ -244,7 +271,7 @@ function updateCurrentScore() {
         destroyedBallsText.innerText = score;
         bestScoreValue.innerText = bestScore;
 
-        restartButton.addEventListener('click', function() {
+        restartButton.addEventListener('click', function () {
             gameOverModal.style.display = 'none';
             resetGame();
         });
@@ -258,6 +285,8 @@ function updateCurrentScore() {
         score = 0;
         gameOver = false;
         playerHit = false;
+        bullets = maxBullets; // Reset the number of bullets
+        updateBulletDisplay(); // Update the bullet display
     }
 
     // Best score handling
@@ -305,10 +334,12 @@ function updateCurrentScore() {
             }
         }
     }
-    
 
     setInterval(updateProjectiles, 1000 / 60); // Update projectiles' position
+
+    replenishBullets(); // Start replenishing bullets over time
 
     animate(); // Initial drawing
     spawnBallsInterval(); // Start spawning balls
 });
+
