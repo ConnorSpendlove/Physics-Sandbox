@@ -14,9 +14,12 @@ document.addEventListener("DOMContentLoaded", function () {
     let lives = 3;
     let gameOver = false;
     let playerHit = false;
+    let playerFlashing = false;
     let bullets = 20; // Current number of bullets
     const maxBullets = 20; // Maximum number of bullets
     const replenishRate = 1000; // Replenish rate in milliseconds (1 bullet every 2 seconds)
+    let heartSpawnChance = 0.0007; // 10% chance of spawning a heart
+
 
     const balls = [];
     const projectiles = [];
@@ -42,6 +45,22 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('bulletCount').textContent = bullets;
     }
 
+    const hearts = [];
+    function spawnHeart() {
+        const heart = {
+            x: Math.random() * canvas.width,
+            y: 0,
+            dy: 1, // Heart's vertical speed
+            radius: 10 // Adjust heart's size as needed
+        };
+        hearts.push(heart);
+    }
+
+    
+    
+
+
+    const LifeUPsound = new Audio('./assets/SpaceInvaders/audio/lifeUP.mp3');
     const pewSound = new Audio('./assets/SpaceInvaders/audio/pew.mp3');
     const boomSound = new Audio('./assets/SpaceInvaders/audio/boom.mp3');
     const ouchSound = new Audio('./assets/SpaceInvaders/audio/ouch.mp3');
@@ -107,10 +126,15 @@ document.addEventListener("DOMContentLoaded", function () {
     function drawPerson() {
         ctx.beginPath();
         ctx.rect(personX, personY, personWidth, personHeight);
-        ctx.fillStyle = playerHit ? 'red' : 'green'; // Flash red when hit
+        if (playerFlashing) {
+            ctx.fillStyle = 'white'; // Flash white when player is flashing
+        } else {
+            ctx.fillStyle = playerHit ? 'red' : 'green'; // Flash red when hit
+        }
         ctx.fill();
         ctx.closePath();
     }
+    
 
     function drawProjectiles() {
         projectiles.forEach(projectile => {
@@ -146,10 +170,53 @@ document.addEventListener("DOMContentLoaded", function () {
         drawPerson();
         drawProjectiles();
         drawHealthBar();
+        updateHearts(); // Add this line to update hearts
         if (gameOver) {
             showGameOverModal();
         }
+    
+        if (lives <= 2 && Math.random() < heartSpawnChance) {
+            spawnHeart();
+        }
     }
+    
+    function updateHearts() {
+        hearts.forEach(heart => {
+            heart.y += heart.dy; // Update heart's position
+            drawHeart(heart); // Draw heart
+            checkHeartCollision(heart); // Check collision with player
+        });
+    }
+    
+    function drawHeart(heart) {
+        const heartImage = new Image();
+        heartImage.src = './assets/SpaceInvaders/images/heart.png';
+        ctx.drawImage(heartImage, heart.x - heart.radius, heart.y - heart.radius, heart.radius * 2, heart.radius * 2);
+    }
+    
+    
+    function checkHeartCollision(heart) {
+        const dx = personX + personWidth / 2 - heart.x;
+        const dy = personY + personHeight / 2 - heart.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < personWidth / 2 + heart.radius && dy > 0) { // Collision with player
+            if (lives < 3) { // Limit to 3 lives
+                lives++; // Increase lives
+                const index = hearts.indexOf(heart);
+                if (index !== -1) {
+                    hearts.splice(index, 1); // Remove heart
+                }
+                LifeUPsound.currentTime = 0;
+                LifeUPsound.play();
+                playerFlashing = true;
+                setTimeout(() => {
+                    playerFlashing = false;
+                    update();
+                }, 200); // Flash white for 200 milliseconds
+            }
+        }
+    }
+    
 
     function moveLeft() {
         personX -= speed;
