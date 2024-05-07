@@ -70,6 +70,13 @@ transition: ease-in-out 0.2s;
     font-size: 18px;
 }
 
+#currentScore {
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    font-size: 18px;
+}
+
 #restartButton {
     margin-top: 20px;
     padding: 10px 20px;
