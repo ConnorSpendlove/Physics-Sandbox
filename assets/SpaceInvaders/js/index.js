@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const hearts = healthBar.querySelectorAll('.heart');
         for (let i = 0; i < hearts.length; i++) {
             if (i < lives) {
-                hearts[i].style.display = 'block';
+                hearts[i].style.display = 'inline';
             } else {
                 hearts[i].style.display = 'none';
             }
