@@ -14,9 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let lives = 3;
     let gameOver = false;
     let playerHit = false;
-    let bullets = 10; // Current number of bullets
-    const maxBullets = 10; // Maximum number of bullets
-    const replenishRate = 2000; // Replenish rate in milliseconds (1 bullet every 2 seconds)
+    let bullets = 20; // Current number of bullets
+    const maxBullets = 20; // Maximum number of bullets
+    const replenishRate = 1000; // Replenish rate in milliseconds (1 bullet every 2 seconds)
 
     const balls = [];
     const projectiles = [];
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const projectile = {
                 x: personX + personWidth / 2,
                 y: personY,
-                dy: -5 // Bullet flies upwards
+                dy: -10 // Bullet flies upwards
             };
             projectiles.push(projectile);
             bullets--; // Reduce the number of bullets
