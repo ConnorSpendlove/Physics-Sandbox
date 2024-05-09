@@ -52,6 +52,12 @@ body {
     padding: 5px 10px;
     cursor: pointer;
 }
+#volumeSlider {
+    position: absolute;
+    top: 40px;
+    left: 15px; /* Ensure it appears above other elements */
+
+}
 
 .back-button a {
 text-decoration: none;

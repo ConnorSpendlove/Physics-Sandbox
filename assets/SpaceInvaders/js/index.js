@@ -420,6 +420,31 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    const volumeSlider = document.getElementById('volumeSlider');
+
+    // Function to set volume of sound effects
+    function setVolume(volume) {
+        LifeUPsound.volume = volume;
+        pewSound.volume = volume;
+        boomSound.volume = volume;
+        ouchSound.volume = volume;
+    }
+
+    // Load volume level from local storage or set default value
+    const savedVolume = localStorage.getItem('volumeLevel');
+    if (savedVolume !== null) {
+        volumeSlider.value = savedVolume;
+        setVolume(savedVolume);
+    }
+
+    // Update volume level in local storage when slider value changes
+    volumeSlider.addEventListener('input', function () {
+        const volume = volumeSlider.value;
+        setVolume(volume);
+        localStorage.setItem('volumeLevel', volume);
+    });
+
+
     setInterval(updateProjectiles, 1000 / 60); // Update projectiles' position
 
     replenishBullets(); // Start replenishing bullets over time
