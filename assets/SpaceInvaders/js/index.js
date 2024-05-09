@@ -450,5 +450,5 @@ document.addEventListener("DOMContentLoaded", function () {
     replenishBullets(); // Start replenishing bullets over time
 
     animate(); // Initial drawing
-    spawnBallsInterval(); // Start spawning balls
+    spawnBallsInterval(); // Start spawning balls haha
 });
